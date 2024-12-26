@@ -71,7 +71,10 @@
     rclone
     nodejs
     lla # https://github.com/triyanox/lla
+    television # https://github.com/alexpasmantier/television
   ];
+
+  environment.variables.EDITOR = "nvim";
 
   # TODO To make this work, homebrew need to be installed manually, see https://brew.sh
   #
@@ -81,7 +84,8 @@
     enable = true;
 
     onActivation = {
-      autoUpdate = false;
+      autoUpdate = true;
+      upgrade = true;
       # 'zap': uninstalls all formulae(and related files) not listed here.
       # cleanup = "zap";
     };
@@ -92,9 +96,7 @@
 
     # `brew install`
     # TODO Feel free to add your favorite apps here.
-    brews = [
-      "television" # download tool
-    ];
+    brews = [ ];
 
     # `brew install --cask`
     # TODO Feel free to add your favorite apps here.
