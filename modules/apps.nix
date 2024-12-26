@@ -70,8 +70,7 @@
     glances
     rclone
     nodejs
-
-    
+    lla # https://github.com/triyanox/lla
   ];
 
   # TODO To make this work, homebrew need to be installed manually, see https://brew.sh
