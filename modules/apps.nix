@@ -110,6 +110,10 @@
       "sonic-pi"
       "wireshark"
       "kitty"
+      "visual-studio-code"
+      "sublime-text"
+      "keka" # https://www.keka.io
+      "apifox" # https://www.apifox.com
     ];
   };
 }
