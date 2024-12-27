@@ -109,6 +109,7 @@
       "stats"
       "sonic-pi"
       "wireshark"
+      "kitty"
     ];
   };
 }
