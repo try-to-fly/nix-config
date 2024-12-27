@@ -69,7 +69,9 @@
     dua
     glances
     rclone
-    nodejs
+    nodejs_23
+    corepack_23
+    pm2
     lla # https://github.com/triyanox/lla
     television # https://github.com/alexpasmantier/television
     m-cli # https://github.com/rgcr/m-cli
