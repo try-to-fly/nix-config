@@ -80,6 +80,7 @@
     television # https://github.com/alexpasmantier/television
     m-cli # https://github.com/rgcr/m-cli
     ghostscript # PDF utils https://www.ghostscript.com/
+    graphicsmagick # http://www.graphicsmagick.org/README.html
   ];
 
   environment.variables.EDITOR = "nvim";
