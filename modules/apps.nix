@@ -76,6 +76,7 @@
     python311Packages.pip
     lua
     luarocks
+    zsh
     lla # https://github.com/triyanox/lla
     television # https://github.com/alexpasmantier/television
     m-cli # https://github.com/rgcr/m-cli
