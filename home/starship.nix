@@ -24,6 +24,10 @@
         format = "[\($state( $progress_current of $progress_total)\)]($style) ";
         cherry_pick = "[🍒 PICKING](bold red)";
       };
+      cmd_duration = {
+        min_time = 100;
+        format = "take [$duration](bold yellow)";
+      };
     };
   };
 }
