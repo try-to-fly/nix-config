@@ -79,6 +79,7 @@
     lla # https://github.com/triyanox/lla
     television # https://github.com/alexpasmantier/television
     m-cli # https://github.com/rgcr/m-cli
+    ghostscript # PDF utils https://www.ghostscript.com/
   ];
 
   environment.variables.EDITOR = "nvim";
