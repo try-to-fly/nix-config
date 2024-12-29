@@ -39,7 +39,6 @@
     curl
     tmux
     zoxide
-    yadm
     poetry
     chafa
     direnv
