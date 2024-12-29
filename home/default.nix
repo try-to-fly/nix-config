@@ -12,6 +12,7 @@
     ./tmux.nix
     ./ripgrep.nix
     ./fd.nix
+    ./sqlite3.nix
   ];
 
   # Home Manager needs a bit of information about you and the
