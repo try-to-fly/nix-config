@@ -81,6 +81,7 @@
     m-cli # https://github.com/rgcr/m-cli
     ghostscript # PDF utils https://www.ghostscript.com/
     graphicsmagick # http://www.graphicsmagick.org/README.html
+    neofetch
   ];
 
   environment.variables.EDITOR = "nvim";
