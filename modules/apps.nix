@@ -125,6 +125,7 @@
       "keka" # https://www.keka.io
       "apifox" # https://www.apifox.com
       "picgo"
+      "tailscale"
     ];
   };
 }

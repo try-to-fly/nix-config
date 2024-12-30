@@ -25,7 +25,6 @@
       "j" = "z";
       "cat" = "bat --paging=never";
       "ocr" = "shortcuts run ocr -i";
-      "tailscale" = "/Applications/Tailscale.app/Contents/MacOS/Tailscale";
     };
 
     initExtraFirst = "
