@@ -55,7 +55,7 @@
       username = "smile";
       system = "aarch64-darwin"; # aarch64-darwin or x86_64-darwin
       hostname = "smile";
-      useremail = "991854471@qq.com";
+      useremail = "wang1234561211@outlook.com";
 
       specialArgs =
         inputs
