@@ -22,7 +22,7 @@
     shellAliases = {
       "ls" = "eza --time-style=long-iso --icons --hyperlink";
       "h" = "history";
-      "j" = "zoxide";
+      "j" = "z";
       "cat" = "bat --paging=never";
       "ocr" = "shortcuts run ocr -i";
       "tailscale" = "/Applications/Tailscale.app/Contents/MacOS/Tailscale";
