@@ -15,6 +15,7 @@
     ./sqlite3.nix
     ./bat.nix
     ./zsh.nix
+    ./atuin.nix
   ];
 
   # Home Manager needs a bit of information about you and the

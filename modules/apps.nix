@@ -81,6 +81,7 @@
     ghostscript # PDF utils https://www.ghostscript.com/
     graphicsmagick # http://www.graphicsmagick.org/README.html
     neofetch
+    atuin
   ];
 
   environment.variables.EDITOR = "nvim";
