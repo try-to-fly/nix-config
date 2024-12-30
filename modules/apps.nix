@@ -44,7 +44,6 @@
     direnv
     git
     ffmpeg
-    eza
     exiftool
     fx
     btop
