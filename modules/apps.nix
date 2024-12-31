@@ -121,7 +121,6 @@
       "stats"
       "sonic-pi"
       "wireshark"
-      "kitty"
       "visual-studio-code"
       "sublime-text"
       "keka" # https://www.keka.io
