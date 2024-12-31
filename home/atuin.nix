@@ -6,8 +6,9 @@
     settings = {
       update_check = false;
       auto_sync = true;
-      show_help = false;
+      show_help = true;
       enter_accept = true;
+      ctrl_n_shortcuts = true;
       sync = {
         records = true;
       };
