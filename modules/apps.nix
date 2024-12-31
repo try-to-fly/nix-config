@@ -84,7 +84,6 @@
     atuin
   ];
 
-  environment.variables.EDITOR = "nvim";
 
   # TODO To make this work, homebrew need to be installed manually, see https://brew.sh
   #
