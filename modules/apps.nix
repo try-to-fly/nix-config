@@ -82,6 +82,7 @@
     graphicsmagick # http://www.graphicsmagick.org/README.html
     neofetch
     atuin
+    alacritty
   ];
 
 
