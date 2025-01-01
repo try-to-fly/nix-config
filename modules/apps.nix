@@ -53,7 +53,6 @@
     yazi
     duf
     scc
-    nushell
     difftastic
     pipenv
     nmap
@@ -82,6 +81,11 @@
     neofetch
     atuin
     alacritty
+    kitty
+  ];
+
+  environment.shells = [
+    pkgs.zsh
   ];
 
 
