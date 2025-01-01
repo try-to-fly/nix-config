@@ -47,7 +47,6 @@
     exiftool
     fx
     btop
-    zsh-syntax-highlighting
     bun
     flyctl
     starship
