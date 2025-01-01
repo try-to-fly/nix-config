@@ -81,7 +81,20 @@ in
 
       }
     ];
-    extraConfig = lib.strings.fileContents ./tmux.conf;
+    extraConfig = ''
+      set -gq allow-passthrough on
+      set -g visual-activity off
+      set -g renumber-windows on
+      set -s set-clipboard on
+
+      # fix tmux default shell : https://github.com/nix-community/home-manager/issues/5952
+      set -gu default-command
+      set -g default-shell "$SHELL"
+
+      set -g @no-scroll-on-exit-copy-mode 'on'
+      bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel 'pbcopy'
+
+    '';
   };
 }
 
