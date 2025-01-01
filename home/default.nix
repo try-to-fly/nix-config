@@ -1,6 +1,18 @@
-{ username, ... }:
+{ username, pkgs, ... }:
 
 {
+
+
+  home.packages = with pkgs; [
+    pkgs.nerd-fonts.droid-sans-mono
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.nerd-fonts.fira-code
+    pkgs.nerd-fonts.symbols-only
+    pkgs.nerd-fonts.zed-mono
+  ];
+
+
+
   # import sub modules
   imports = [
     # ./shell.nix
