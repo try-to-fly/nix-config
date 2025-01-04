@@ -1,6 +1,7 @@
-{
+{ pkgs, ... }: {
   programs.zsh = {
     enable = true;
+    package = pkgs.zsh;
     enableCompletion = true;
     history = {
       ignoreDups = true;

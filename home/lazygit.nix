@@ -1,6 +1,7 @@
-{
+{ pkgs, ... }: {
   programs.lazygit = {
     enable = true;
+    package = pkgs.lazygit;
     settings = {
       gui = {
         language = "zh-CN";

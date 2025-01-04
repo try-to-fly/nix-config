@@ -19,12 +19,8 @@
   # Related Discussion: https://discourse.nixos.org/t/darwin-again/29331
   environment.systemPackages = with pkgs; [
     neovim
-    ripgrep
-    lazygit
-    fd
     lazydocker
     jq
-    bat
     imagemagick
     eza
     fzf
@@ -37,20 +33,15 @@
     nnn
     wget
     curl
-    tmux
-    zoxide
     poetry
     chafa
     direnv
-    git
     ffmpeg
     exiftool
     fx
     btop
     bun
     flyctl
-    starship
-    yazi
     duf
     scc
     difftastic
@@ -72,16 +63,12 @@
     python311Packages.pip
     lua
     luarocks
-    zsh
     lla # https://github.com/triyanox/lla
     television # https://github.com/alexpasmantier/television
     m-cli # https://github.com/rgcr/m-cli
     ghostscript # PDF utils https://www.ghostscript.com/
     graphicsmagick # http://www.graphicsmagick.org/README.html
     neofetch
-    atuin
-    alacritty
-    kitty
   ];
 
   environment.shells = [

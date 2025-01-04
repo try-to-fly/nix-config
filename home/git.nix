@@ -1,7 +1,8 @@
-{ username, useremail, ... }: {
+{ username, useremail, pkgs, ... }: {
 
   programs.git = {
     enable = true;
+    package = pkgs.git;
     lfs.enable = true;
 
     userName = username;

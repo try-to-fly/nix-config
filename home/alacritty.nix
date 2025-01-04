@@ -1,7 +1,7 @@
-{
-
+{ pkgs, ... }: {
   programs.alacritty = {
     enable = true;
+    package = pkgs.alacritty;
     settings = {
       env = { TERM = "xterm-256color"; };
       window.padding = { x = 0; y = 0; };

@@ -26,6 +26,7 @@ in
 {
   programs.tmux = {
     enable = true;
+    package = pkgs.tmux;
     clock24 = true;
     escapeTime = 0;
     historyLimit = 10000;

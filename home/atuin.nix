@@ -1,7 +1,8 @@
-{
+{ pkgs, ... }: {
   # https://docs.atuin.sh/configuration/config/
   programs.atuin = {
     enable = true;
+    package = pkgs.atuin;
     flags = [ "--disable-up-arrow" ];
     settings = {
       update_check = false;
