@@ -7,8 +7,15 @@
 
     userName = username;
     userEmail = useremail;
-
+    ignores = [
+      ".DS_Store"
+    ];
+    signing = {
+      signByDefault = true;
+      key = "/Users/${username}/.ssh/id_ed25519";
+    };
     extraConfig = {
+      gpg.format = "ssh";
       core = {
         editor = "nvim";
       };
@@ -27,7 +34,10 @@
     delta = {
       enable = true;
       options = {
-        features = "side-by-side";
+        line-numbers = true;
+        side-by-side = true;
+        diff-so-fancy = true;
+        navigate = true;
       };
     };
   };
