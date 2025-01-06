@@ -3,6 +3,7 @@
     enable = true;
     package = pkgs.lazygit;
     settings = {
+      promptToReturnFromSubprocess = false;
       gui = {
         language = "zh-CN";
         nerdFontsVersion = "3";
