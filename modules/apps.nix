@@ -69,6 +69,12 @@
     ghostscript # PDF utils https://www.ghostscript.com/
     graphicsmagick # http://www.graphicsmagick.org/README.html
     neofetch
+    nali # 查询IP地理信息和CDN服务提供商 https://github.com/zu1k/nali
+    dogdns
+    unar
+    ffmpegthumbnailer
+    jless
+    jc
   ];
 
   environment.shells = [
