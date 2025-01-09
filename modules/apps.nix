@@ -56,7 +56,7 @@
     dua
     glances
     rclone
-    nodejs_23
+    nodejs_22
     corepack_23
     pm2
     python311
