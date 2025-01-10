@@ -75,6 +75,7 @@
     ffmpegthumbnailer
     jless
     jc
+    ngrok
   ];
 
   environment.shells = [
