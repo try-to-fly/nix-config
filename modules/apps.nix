@@ -76,6 +76,7 @@
     jless
     jc
     ngrok
+    yt-dlp
   ];
 
   environment.shells = [
