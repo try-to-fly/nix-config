@@ -77,6 +77,9 @@
     jc
     ngrok
     yt-dlp
+    rustc
+    rustup
+    cargo
   ];
 
   environment.shells = [
