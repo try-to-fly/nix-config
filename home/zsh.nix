@@ -70,6 +70,6 @@ export PATH=$PATH:/Applications/极空间.app/Contents/Resources/app.asar.unpack
   home.sessionVariables = {
     EDITOR = "nvim";
     VISUAL = "nvim";
-    XDG_CONFIG_HOME = "$HOME/.config";
+    # XDG_CONFIG_HOME = "$HOME/.config";
   };
 }
