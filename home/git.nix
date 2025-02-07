@@ -32,13 +32,16 @@
     };
 
     delta = {
-      enable = true;
+      enable = false;
       options = {
         line-numbers = true;
         side-by-side = true;
         diff-so-fancy = true;
         navigate = true;
       };
+    };
+    difftastic = {
+      enable = true;
     };
   };
 }
