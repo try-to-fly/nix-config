@@ -71,16 +71,6 @@ in
       {
         plugin = t-smart-tmux-session-manager;
       }
-      {
-        plugin = tmux-ssh-split;
-        extraConfig = ''
-          set-option -g @ssh-split-keep-cwd "true"
-          # set-option -g @ssh-split-keep-remote-cwd "true"
-          set-option -g @ssh-split-h-key "|"
-          set-option -g @ssh-split-v-key "-"
-        '';
-
-      }
     ];
     extraConfig = ''
       set -gq allow-passthrough on
@@ -94,6 +84,10 @@ in
 
       set -g @no-scroll-on-exit-copy-mode 'on'
       bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel 'pbcopy'
+
+      bind - splitw -v -c '#{pane_current_path}' # 垂直方向新增面板，默认进入当前目录
+      bind | splitw -h -c '#{pane_current_path}' # 水平方向新增面板，默认进入当前目录
+
 
     '';
   };
