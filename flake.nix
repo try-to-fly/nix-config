@@ -67,6 +67,10 @@
       darwinConfigurations."${hostname}" = darwin.lib.darwinSystem {
         inherit system specialArgs;
         modules = [
+          {
+
+            ids.gids.nixbld = 30000;
+          }
           ./modules/nix-core.nix
           ./modules/system.nix
           ./modules/apps.nix
