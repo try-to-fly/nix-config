@@ -80,6 +80,7 @@
     rustc
     rustup
     cargo
+    otree
   ];
 
   environment.shells = [
