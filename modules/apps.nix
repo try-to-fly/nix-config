@@ -59,8 +59,8 @@
     nodejs_22
     corepack_23
     pm2
-    python311
-    python311Packages.pip
+    python312
+    python312Packages.pip
     lua
     luarocks
     lla # https://github.com/triyanox/lla
