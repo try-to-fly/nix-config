@@ -4,11 +4,11 @@
 
 
   home.packages = with pkgs; [
-    pkgs.nerd-fonts.droid-sans-mono
-    pkgs.nerd-fonts.jetbrains-mono
-    pkgs.nerd-fonts.fira-code
-    pkgs.nerd-fonts.symbols-only
-    pkgs.nerd-fonts.zed-mono
+    nerd-fonts.droid-sans-mono
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+    nerd-fonts.symbols-only
+    nerd-fonts.zed-mono
   ];
 
 
