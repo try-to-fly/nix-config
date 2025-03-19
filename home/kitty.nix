@@ -36,11 +36,13 @@
       macos_option_as_alt = true; # Option key acts as Alt on macOS
       tab_bar_edge = "top"; # tab bar on top
       confirm_os_window_close = 0;
+      update_check_interval = 0;
 
       bell_on_tab = "yes";
       window_alert_on_bell = "no";
       enable_audio_bell = false;
       clipboard_control = "read-clipboard write-clipboard read-primary write-primary";
+      paste_actions = "no-op";
       extraConfig = ''
         map alt+left send_text all \x1b\x62
         map alt+right send_text all \x1b\x66
