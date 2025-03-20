@@ -129,6 +129,7 @@
       "apifox" # https://www.apifox.com
       "picgo"
       "tailscale"
+      "font-maple-mono-nf-cn"
     ];
   };
 }

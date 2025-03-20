@@ -21,7 +21,7 @@
     # and it's installed by home-manager if `theme` is specified.
     themeFile = "Dracula";
     font = {
-      name = "DroidSansM Nerd Font Mono";
+      name = "Maple Mono NF CN";
       # use different font size on macOS
       size = 11;
     };
@@ -48,6 +48,7 @@
     extraConfig = ''
       map alt+left send_text all \x1b\x62
       map alt+right send_text all \x1b\x66
+      modify_font cell_height 120%
     '';
     # macOS specific settings
     darwinLaunchOptions = [ "--start-as=maximized" ];
