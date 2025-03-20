@@ -43,12 +43,12 @@
       enable_audio_bell = false;
       clipboard_control = "read-clipboard write-clipboard read-primary write-primary";
       paste_actions = "no-op";
-      extraConfig = ''
-        map alt+left send_text all \x1b\x62
-        map alt+right send_text all \x1b\x66
-      '';
-    };
 
+    };
+    extraConfig = ''
+      map alt+left send_text all \x1b\x62
+      map alt+right send_text all \x1b\x66
+    '';
     # macOS specific settings
     darwinLaunchOptions = [ "--start-as=maximized" ];
   };
