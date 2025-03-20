@@ -81,6 +81,7 @@
     rustup
     cargo
     otree
+    postgresql
   ];
 
   environment.shells = [
