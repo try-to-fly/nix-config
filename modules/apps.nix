@@ -111,6 +111,7 @@
     # TODO Feel free to add your favorite apps here.
     brews = [
       "telnet"
+      "git-who"
     ];
 
     # `brew install --cask`
