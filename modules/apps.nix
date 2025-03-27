@@ -82,6 +82,7 @@
     cargo
     otree
     postgresql
+    aria2
   ];
 
   environment.shells = [
@@ -132,6 +133,7 @@
       "picgo"
       "tailscale"
       "font-maple-mono-nf-cn"
+      "proxyman"
     ];
   };
 }
