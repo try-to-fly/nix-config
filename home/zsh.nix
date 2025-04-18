@@ -43,6 +43,10 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 # 禁用conda更新检查
 export CONDA_NUMBER_CHANNEL_NOTICES=0
 
+# 条件加载 Homebrew 补全
+if [ -f /opt/homebrew/share/zsh/site-functions/_brew_services ]; then
+  fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+fi
 
 export SCRCPY_SERVER_PATH=/Applications/极空间.app/Contents/Resources/app.asar.unpacked/bin/platform-tools/scrcpy-server
 export PATH=$PATH:/Applications/极空间.app/Contents/Resources/app.asar.unpacked/bin/platform-tools
