@@ -83,6 +83,7 @@
     otree
     postgresql
     aria2
+    go
   ];
 
   environment.shells = [
