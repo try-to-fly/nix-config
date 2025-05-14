@@ -135,6 +135,7 @@
       "tailscale"
       "font-maple-mono-nf-cn"
       "proxyman"
+      "android-platform-tools"
     ];
   };
 }
