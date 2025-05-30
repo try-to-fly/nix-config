@@ -57,6 +57,7 @@
     glances
     rclone
     nodejs_22
+    nodePackages.prettier
     corepack_23
     pm2
     python312
@@ -84,6 +85,8 @@
     postgresql
     aria2
     go
+    uv
+    f2
   ];
 
   environment.shells = [
