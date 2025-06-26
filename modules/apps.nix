@@ -128,8 +128,6 @@
       "rustdesk"
       "iina"
       "stats"
-      "sonic-pi"
-      "wireshark"
       "visual-studio-code"
       "sublime-text"
       "keka" # https://www.keka.io
