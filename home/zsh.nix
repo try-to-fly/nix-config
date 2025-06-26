@@ -55,6 +55,8 @@ export PATH=$PATH:/Applications/极空间.app/Contents/Resources/app.asar.unpack
       # Puppeteer 配置
       export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
       export PUPPETEER_EXECUTABLE_PATH=`which chromium`
+      export PNPM_HOME="$HOME/.pnpm-global-packages/bin"
+      export PATH="$PNPM_HOME:$PATH"
 
       export PATH="$HOME/.local/bin:$PATH"
 
