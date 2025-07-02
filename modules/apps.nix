@@ -87,6 +87,7 @@
     go
     uv
     f2
+    iperf3
   ];
 
   environment.shells = [
