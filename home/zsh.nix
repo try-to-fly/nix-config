@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }: {
   programs.zsh = {
     enable = true;
     package = pkgs.zsh;
@@ -28,7 +28,7 @@
       "ocr" = "shortcuts run ocr -i";
     };
 
-    initExtraFirst = "
+    initContent = lib.mkBefore ''
 # 优化粘贴速度
 pasteinit() {
   OLD_SELF_INSERT=$\{$\{(s.:.)widgets[self-insert]}[2,3]}
@@ -50,7 +50,7 @@ fi
 
 export SCRCPY_SERVER_PATH=/Applications/极空间.app/Contents/Resources/app.asar.unpacked/bin/platform-tools/scrcpy-server
 export PATH=$PATH:/Applications/极空间.app/Contents/Resources/app.asar.unpacked/bin/platform-tools
-    ";
+    '';
     envExtra = ''
       # Puppeteer 配置
       export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
