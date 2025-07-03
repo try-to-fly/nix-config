@@ -58,7 +58,7 @@
     rclone
     nodejs_22
     nodePackages.prettier
-    corepack_23
+    corepack_24
     pm2
     python312
     python312Packages.pip
