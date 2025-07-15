@@ -29,27 +29,27 @@
     };
 
     initContent = lib.mkBefore ''
-# 优化粘贴速度
-pasteinit() {
-  OLD_SELF_INSERT=$\{$\{(s.:.)widgets[self-insert]}[2,3]}
-  zle -N self-insert url-quote-magic 
-}
-pastefinish() {
-  zle -N self-insert $OLD_SELF_INSERT
-}
-zstyle :bracketed-paste-magic paste-init pasteinit
-zstyle :bracketed-paste-magic paste-finish pastefinish
+      # 优化粘贴速度
+      # pasteinit() {
+      #   OLD_SELF_INSERT=$\{$\{(s.:.)widgets[self-insert]}[2,3]}
+      #   zle -N self-insert url-quote-magic 
+      # }
+      # pastefinish() {
+      #   zle -N self-insert $OLD_SELF_INSERT
+      # }
+      # zstyle :bracketed-paste-magic paste-init pasteinit
+      # zstyle :bracketed-paste-magic paste-finish pastefinish
 
-# 禁用conda更新检查
-export CONDA_NUMBER_CHANNEL_NOTICES=0
+      # 禁用conda更新检查
+      export CONDA_NUMBER_CHANNEL_NOTICES=0
 
-# 条件加载 Homebrew 补全
-if [ -f /opt/homebrew/share/zsh/site-functions/_brew_services ]; then
-  fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
-fi
+      # 条件加载 Homebrew 补全
+      if [ -f /opt/homebrew/share/zsh/site-functions/_brew_services ]; then
+        fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+      fi
 
-export SCRCPY_SERVER_PATH=/Applications/极空间.app/Contents/Resources/app.asar.unpacked/bin/platform-tools/scrcpy-server
-export PATH=$PATH:/Applications/极空间.app/Contents/Resources/app.asar.unpacked/bin/platform-tools
+      export SCRCPY_SERVER_PATH=/Applications/极空间.app/Contents/Resources/app.asar.unpacked/bin/platform-tools/scrcpy-server
+      export PATH=$PATH:/Applications/极空间.app/Contents/Resources/app.asar.unpacked/bin/platform-tools
     '';
     envExtra = ''
       # Puppeteer 配置
