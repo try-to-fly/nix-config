@@ -62,6 +62,7 @@
     pm2
     python312
     python312Packages.pip
+    python312Packages.git-filter-repo
     lua
     luarocks
     lla # https://github.com/triyanox/lla
