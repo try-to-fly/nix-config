@@ -30,7 +30,7 @@
     ./atuin.nix
     ./zoxide.nix
     ./git.nix
-    ./alacritty.nix
+    # ./alacritty.nix
     ./kitty.nix
   ];
 
