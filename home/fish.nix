@@ -31,6 +31,7 @@
       "gp" = "git push";
       "gs" = "git status";
       "gst" = "git stash";
+      "gpsup" = "git push --set-upstream origin (current_branch)";
       
       # 其他有用的缩写
       "ll" = "ls -la";
@@ -79,6 +80,14 @@
             case "*"
               echo "不支持的文件类型: $file"
           end
+        end
+      '';
+      
+      # 获取当前Git分支
+      current_branch = ''
+        function current_branch
+          set -l ref (git symbolic-ref HEAD 2> /dev/null); or set -l ref (git rev-parse --short HEAD 2> /dev/null); or return
+          echo $ref | sed -e 's|^refs/heads/||'
         end
       '';
       
