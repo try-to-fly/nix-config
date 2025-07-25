@@ -3,7 +3,7 @@
     enable = true;
     package = pkgs.starship;
     enableBashIntegration = true;
-    enableZshIntegration = true;
+    enableFishIntegration = true;
     enableNushellIntegration = true;
 
     settings = {

@@ -26,7 +26,7 @@
     ./fd.nix
     ./sqlite3.nix
     ./bat.nix
-    ./zsh.nix
+    ./fish.nix
     # ./atuin.nix
     ./zoxide.nix
     ./git.nix
