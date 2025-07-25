@@ -117,11 +117,6 @@
     shellInit = ''
       # Puppeteer 配置
       set -gx PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-      set -gx PUPPETEER_EXECUTABLE_PATH (which chromium)
-      set -gx PNPM_HOME "$HOME/.pnpm-global-packages/bin"
-      set -gx PATH "$PNPM_HOME:$PATH"
-
-      set -gx PATH "$HOME/.local/bin:$PATH"
 
       # 禁用pip更新检查
       set -gx PIP_DISABLE_PIP_VERSION_CHECK 1
@@ -134,6 +129,10 @@
 
     # Fish 交互式初始化 (等同于zsh的initContent)
     interactiveShellInit = ''
+      # Manually prepend Nix paths to ensure they are available.
+      set -gx PATH /etc/profiles/per-user/smile/bin $PATH
+      set -gx PATH /run/current-system/sw/bin $PATH
+      
       # 禁用conda更新检查
       set -gx CONDA_NUMBER_CHANNEL_NOTICES 0
 
@@ -141,9 +140,6 @@
       if test -f /opt/homebrew/share/fish/vendor_completions.d/brew.fish
         source /opt/homebrew/share/fish/vendor_completions.d/brew.fish
       end
-
-      set -gx SCRCPY_SERVER_PATH /Applications/极空间.app/Contents/Resources/app.asar.unpacked/bin/platform-tools/scrcpy-server
-      set -gx PATH $PATH /Applications/极空间.app/Contents/Resources/app.asar.unpacked/bin/platform-tools
 
       # 设置fish的颜色主题
       set -g fish_color_autosuggestion 555
