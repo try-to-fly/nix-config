@@ -27,7 +27,7 @@
     ./sqlite3.nix
     ./bat.nix
     ./fish.nix
-    # ./atuin.nix
+    ./atuin.nix
     ./zoxide.nix
     ./git.nix
     # ./alacritty.nix
