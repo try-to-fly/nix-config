@@ -2,7 +2,7 @@
   programs.fish = {
     enable = true;
     package = pkgs.fish;
-    
+
     # Shell aliases (保持与zsh相同)
     shellAliases = {
       "ls" = "eza --time-style=long-iso --icons --hyperlink";
@@ -18,21 +18,44 @@
       ".." = "cd ..";
       "..." = "cd ../..";
       "...." = "cd ../../..";
-      
-      # Git 缩写
-      "g" = "git";
-      "ga" = "git add";
-      "gaa" = "git add --all";
-      "gc" = "git commit";
-      "gcm" = "git commit -m";
-      "gco" = "git checkout";
-      "gd" = "git diff";
-      "gl" = "git log";
-      "gp" = "git push";
-      "gs" = "git status";
-      "gst" = "git stash";
-      "gpsup" = "git push --set-upstream origin (current_branch)";
-      
+
+      # Git 缩写 (灵感来自 oh-my-zsh git 插件)
+      g = "git";
+
+      # git add
+      ga = "git add";
+      gaa = "git add --all";
+
+      # git branch
+      gb = "git branch";
+      gba = "git branch -a";
+
+      # git commit
+      gc = "git commit -v";
+      gca = "git commit -v -a";
+      gcam = "git commit -a -m";
+
+      # git checkout / switch
+      gco = "git checkout";
+      gcb = "git checkout -b";
+
+
+      # git fetch
+      gf = "git fetch";
+
+      # git log
+      glog = "git log --oneline --decorate --graph";
+
+      # git pull
+      gl = "git pull";
+
+      # git push
+      gp = "git push";
+      gpsup = "git push --set-upstream origin (current_branch)";
+
+      # git status
+      gst = "git status";
+
       # 其他有用的缩写
       "ll" = "ls -la";
       "la" = "ls -la";
@@ -50,7 +73,7 @@
           and cd $dir
         end
       '';
-      
+
       # 提取各种压缩文件
       extract = ''
         function extract --argument-names file
@@ -82,7 +105,7 @@
           end
         end
       '';
-      
+
       # 获取当前Git分支
       current_branch = ''
         function current_branch
@@ -90,7 +113,7 @@
           echo $ref | sed -e 's|^refs/heads/||'
         end
       '';
-      
+
       # 查找进程
       psgrep = ''
         function psgrep --argument-names pattern
@@ -124,6 +147,8 @@
 
     # Fish shell环境变量 (等同于zsh的envExtra)
     shellInit = ''
+      # 禁用欢迎语
+      set -g fish_greeting ""
       # Puppeteer 配置
       set -gx PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
@@ -190,4 +215,5 @@
   # 这部分需要手动执行：
   # echo /path/to/fish | sudo tee -a /etc/shells
   # chsh -s /path/to/fish
-} 
+}
+
