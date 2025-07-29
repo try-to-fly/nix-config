@@ -120,6 +120,15 @@
           ps aux | grep $pattern | grep -v grep
         end
       '';
+      take = ''
+        function take
+            if test -z "$argv[1]"
+                echo "Usage: take <directory>"
+                return 1
+            end
+            mkdir -p $argv[1] && cd $argv[1]
+        end
+      '';
     };
 
     # Fish插件
