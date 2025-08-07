@@ -63,6 +63,7 @@
     python312
     python312Packages.pip
     python312Packages.git-filter-repo
+    python312Packages.pipx
     lua
     luarocks
     lla # https://github.com/triyanox/lla
