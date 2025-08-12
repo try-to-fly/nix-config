@@ -90,6 +90,7 @@
     uv
     f2
     iperf3
+    tesseract
   ];
 
   environment.shells = [
