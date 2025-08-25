@@ -91,6 +91,7 @@
     f2
     iperf3
     tesseract
+    redis
   ];
 
   environment.shells = [
