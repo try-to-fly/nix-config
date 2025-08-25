@@ -121,12 +121,35 @@
         end
       '';
       take = ''
-        function take
-            if test -z "$argv[1]"
+        function take --argument-names dir
+            if test -z "$dir"
                 echo "Usage: take <directory>"
                 return 1
             end
-            mkdir -p $argv[1] && cd $argv[1]
+            mkdir -p $dir && cd $dir
+        end
+      '';
+
+      # Nix 垃圾回收
+      nixgc = ''
+        function nixgc
+          echo "🧹 清理 Nix 存储..."
+          nix-collect-garbage --delete-older-than 7d
+          echo "📊 优化存储空间..."
+          nix-store --optimise
+          echo "✅ 清理完成！当前存储大小："
+          du -sh /nix/store
+        end
+      '';
+
+      # Nix 存储信息
+      nixinfo = ''
+        function nixinfo
+          echo "📦 Nix 存储信息："
+          echo "存储大小: "(du -sh /nix/store 2>/dev/null | cut -f1)
+          echo "GC roots: "(nix-store -q --roots | wc -l)" 个"
+          echo "用户代数: "(nix-env --list-generations | tail -1 | awk '{print $1}')
+          echo "系统代数: "(sudo nix-env --list-generations --profile /nix/var/nix/profiles/system 2>/dev/null | tail -1 | awk '{print $1}')
         end
       '';
     };
