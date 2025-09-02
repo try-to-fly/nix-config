@@ -69,10 +69,8 @@
     functions = {
       # 创建目录并进入
       mkcd = ''
-        function mkcd --argument-names dir
-          mkdir -p $dir
-          and cd $dir
-        end
+        mkdir -p $argv[1]
+        and cd $argv[1]
       '';
 
       # 提取各种压缩文件
@@ -122,13 +120,11 @@
         end
       '';
       take = ''
-        function take --argument-names dir
-            if test -z "$dir"
-                echo "Usage: take <directory>"
-                return 1
-            end
-            mkdir -p $dir && cd $dir
+        if test -z "$argv[1]"
+            echo "Usage: take <directory>"
+            return 1
         end
+        mkdir -p $argv[1] && cd $argv[1]
       '';
 
       # Nix 垃圾回收

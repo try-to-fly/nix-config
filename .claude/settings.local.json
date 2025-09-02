@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/Users/smile/.config/fish/functions/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
