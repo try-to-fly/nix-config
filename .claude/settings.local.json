@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Read(/Users/smile/.config/fish/functions/**)"
+      "Read(/Users/smile/.config/fish/functions/**)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

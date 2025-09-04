@@ -58,7 +58,7 @@
     rclone
     nodejs_22
     nodePackages.prettier
-    corepack_24
+    corepack_22
     pm2
     python312
     python312Packages.pip
@@ -96,6 +96,7 @@
 
   environment.shells = [
     pkgs.zsh
+    pkgs.fish
   ];
 
 

@@ -12,7 +12,6 @@
   nixConfig = {
     substituters = [
       # Query the mirror of USTC first, and then the official cache.
-      "https://mirrors.ustc.edu.cn/nix-channels/store"
       "https://cache.nixos.org"
     ];
   };
@@ -69,7 +68,7 @@
         modules = [
           {
 
-            ids.gids.nixbld = 30000;
+            ids.gids.nixbld = 350;
           }
           ./modules/nix-core.nix
           ./modules/system.nix
