@@ -10,6 +10,9 @@
       "j" = "z";
       "cat" = "bat --paging=never";
       "ocr" = "shortcuts run ocr -i";
+      # Proxy toggle aliases
+      "proxyon" = "set -gx https_proxy http://127.0.0.1:7890; set -gx http_proxy http://127.0.0.1:7890; set -gx all_proxy socks5://127.0.0.1:7890; echo Proxy enabled";
+      "proxyoff" = "set -e https_proxy; set -e http_proxy; set -e all_proxy; echo Proxy disabled";
     };
 
     # Fish abbreviations (智能缩写，fish特有功能)
@@ -150,6 +153,21 @@
         end
       '';
 
+      # 查看代理状态
+      proxystatus = ''
+        set -l proxy_envs (env | grep -E '^(https?_proxy|all_proxy|HTTPS?_PROXY|ALL_PROXY)=')
+        if test (count $proxy_envs) -gt 0
+          set_color green
+          echo "✅ Proxy: ON"
+          set_color normal
+          printf "%s\n" $proxy_envs
+        else
+          set_color red
+          echo "❌ Proxy: OFF"
+          set_color normal
+        end
+      '';
+
       # 智能切换到主分支 (main 或 master)
       git_checkout_main = ''
         function git_checkout_main
@@ -277,4 +295,3 @@
   # echo /path/to/fish | sudo tee -a /etc/shells
   # chsh -s /path/to/fish
 }
-
