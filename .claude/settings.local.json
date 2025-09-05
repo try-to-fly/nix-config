@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Read(/Users/smile/.config/fish/functions/**)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []
