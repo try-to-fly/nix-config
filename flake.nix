@@ -72,6 +72,7 @@
           }
           ./modules/nix-core.nix
           ./modules/system.nix
+          ./modules/macos-defaults.nix
           ./modules/apps.nix
           ./modules/homebrew-mirror.nix
           ./modules/host-users.nix
