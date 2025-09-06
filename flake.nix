@@ -11,7 +11,7 @@
   # the nixConfig here only affects the flake itself, not the system configuration!
   nixConfig = {
     substituters = [
-      # Query the mirror of USTC first, and then the official cache.
+      # Use the official Nix binary cache for stability.
       "https://cache.nixos.org"
     ];
   };
@@ -19,21 +19,21 @@
   # This is the standard format for flake.nix. `inputs` are the dependencies of the flake,
   # Each item in `inputs` will be passed as a parameter to the `outputs` function after being pulled and built.
   inputs = {
-    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    #nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
+    # Pin nixpkgs to the 25.05 Darwin branch (stable).
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
 
     # home-manager, used for managing user configuration
     home-manager = {
-      url = "github:nix-community/home-manager/master";
-      # The `follows` keyword in inputs is used for inheritance.
-      # Here, `inputs.nixpkgs` of home-manager is kept consistent with the `inputs.nixpkgs` of the current flake,
-      # to avoid problems caused by different versions of nixpkgs dependencies.
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
+      # Match Home Manager with the 25.05 series for compatibility.
+      url = "github:nix-community/home-manager/release-25.05";
+      # Keep HM's nixpkgs input in lockstep with this flake's nixpkgs
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     darwin = {
-      url = "github:lnl7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
+      # Pin nix-darwin to the 25.05 release branch to match nixpkgs
+      url = "github:lnl7/nix-darwin/nix-darwin-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -44,11 +44,11 @@
   # The `@` syntax here is used to alias the attribute set of the inputs's parameter, making it convenient to use inside the function.
   outputs =
     inputs @ { self
-    , nixpkgs
-    , darwin
-    , home-manager
-    , ...
-    }:
+      , nixpkgs
+      , darwin
+      , home-manager
+      , ...
+      }:
     let
       # TODO replace with your own username, system and hostname
       username = "smile";
