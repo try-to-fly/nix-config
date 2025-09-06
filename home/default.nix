@@ -1,4 +1,4 @@
-{ username, pkgs, ... }:
+{ username, pkgs, nix-index-database, ... }:
 
 {
 
@@ -15,6 +15,9 @@
 
   # import sub modules
   imports = [
+    # nix-index + prebuilt database for command-not-found suggestions
+    nix-index-database.hmModules.nix-index
+    ./nix-index.nix
     # ./shell.nix
     # ./core.nix
     # ./git.nix
