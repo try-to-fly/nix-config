@@ -35,7 +35,6 @@
     curl
     poetry
     chafa
-    direnv
     ffmpeg
     exiftool
     fx

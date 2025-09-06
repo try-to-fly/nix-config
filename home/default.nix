@@ -29,6 +29,7 @@
     ./fish.nix
     ./atuin.nix
     ./zoxide.nix
+    ./direnv.nix
     ./git.nix
     # ./alacritty.nix
     ./kitty.nix
