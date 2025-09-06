@@ -24,5 +24,21 @@
   # "error: cannot link '/nix/store/.tmp-link-xxxxx-xxxxx' to '/nix/store/.links/xxxx': File exists"
   nix.settings = {
     auto-optimise-store = false;
+    # Add community binary caches to speed up builds. You can keep the official cache.
+    # Note: For Cachix caches, you must also add the matching public keys below.
+    substituters = [
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+    ];
+
+    # Pair public keys for the added substituters. The official cache key is included by default,
+    # but listing it here is harmless. Add nix-community’s key to enable that cache.
+    # To avoid errors from an incorrect key, the nix-community key is commented; uncomment after verifying.
+    trusted-public-keys = [
+      # Official cache
+      "cache.nixos.org-1:6NCHdD59X431o0gWyp0adLpQIskS0x4VSBYp3Hg0L6s="
+      # nix-community (uncomment after verifying the key string)
+      # "nix-community.cachix.org-1:REPLACE_WITH_OFFICIAL_PUBLIC_KEY"
+    ];
   };
 }
