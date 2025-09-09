@@ -1,0 +1,12 @@
+# 统一编辑器基础规则（Nix 文件强调 2 空格缩进、LF 换行）
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+
+[*.nix]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true

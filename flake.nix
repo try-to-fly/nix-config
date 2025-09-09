@@ -41,6 +41,12 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Nix 原生 pre-commit hooks，用于提交前自动格式化等检查
+    pre-commit-hooks = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # The `outputs` function will return all the build results of the flake.
@@ -53,6 +59,7 @@
       , nixpkgs
       , darwin
       , home-manager
+      , pre-commit-hooks
       , ...
       }:
     let
@@ -67,6 +74,9 @@
         // {
           inherit username useremail hostname;
         };
+      # 统一声明支持的 Darwin 架构，便于 formatter / checks / devShell 一致
+      systems = [ "aarch64-darwin" "x86_64-darwin" ];
+      forAllSystems = f: builtins.listToAttrs (map (system: { name = system; value = f system; }) systems);
     in
     {
       darwinConfigurations."${hostname}" = darwin.lib.darwinSystem {
@@ -95,7 +105,35 @@
           }
         ];
       };
-      # nix code formatter
-      formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
+      # 统一 Nix 代码 formatter：使用 nixfmt-rfc-style（跨架构一致）
+      formatter = forAllSystems (system: let pkgs = nixpkgs.legacyPackages.${system}; in pkgs.nixfmt-rfc-style);
+
+      # 提交前自动格式化（Nix 版 pre-commit hooks）
+      checks = forAllSystems (system: let
+        pkgs = import nixpkgs { inherit system; };
+      in {
+        # 运行方式：`nix build .#checks.${system}.pre-commit` 或 CI 中引用
+        pre-commit = pre-commit-hooks.lib.${system}.run {
+          src = ./.;
+          hooks = {
+            # 启用 nixfmt-rfc-style 进行 Nix 文件格式化
+            nixfmt-rfc-style.enable = true;
+          };
+        };
+      });
+
+      # 开发环境（可选）：提供 pre-commit 与 nixfmt-rfc-style，便于本地安装/运行 hooks
+      devShells = forAllSystems (system: let pkgs = import nixpkgs { inherit system; }; in {
+        default = pkgs.mkShell {
+          packages = with pkgs; [
+            nixfmt-rfc-style
+            pre-commit
+          ];
+          # 提示信息更友好
+          shellHook = ''
+            export PRE_COMMIT_COLOR=always
+          '';
+        };
+      });
     };
 }
