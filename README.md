@@ -1,5 +1,5 @@
 ```bash
-nix build .#darwinConfigurations.smile.system --extra-experimental-features 'nix-command flakes'
+nix build .#darwinConfigurations.smile.system --no-link --extra-experimental-features 'nix-command flakes'
 ```
 
 ```bash
