@@ -171,33 +171,31 @@
 
       # 智能切换到主分支 (main 或 master)
       git_checkout_main = ''
-        function git_checkout_main
-          # 检查是否在git仓库中
-          if not git rev-parse --git-dir >/dev/null 2>&1
-            echo "❌ 不在 git 仓库中"
-            return 1
-          end
+        # 检查是否在git仓库中
+        if not git rev-parse --git-dir >/dev/null 2>&1
+          echo "❌ 不在 git 仓库中"
+          return 1
+        end
 
-          # 首先尝试切换到 main 分支
-          if git show-ref --verify --quiet refs/heads/main
-            git checkout main
-            echo "✅ 已切换到 main 分支"
-          else if git show-ref --verify --quiet refs/remotes/origin/main
-            # 如果本地没有但远程有 main 分支
-            git checkout -b main origin/main
-            echo "✅ 已创建并切换到 main 分支"
-          else if git show-ref --verify --quiet refs/heads/master
-            # 尝试切换到 master 分支
-            git checkout master
-            echo "✅ 已切换到 master 分支"
-          else if git show-ref --verify --quiet refs/remotes/origin/master
-            # 如果本地没有但远程有 master 分支
-            git checkout -b master origin/master
-            echo "✅ 已创建并切换到 master 分支"
-          else
-            echo "❌ 找不到 main 或 master 分支"
-            return 1
-          end
+        # 首先尝试切换到 main 分支
+        if git show-ref --verify --quiet refs/heads/main
+          git checkout main
+          echo "✅ 已切换到 main 分支"
+        else if git show-ref --verify --quiet refs/remotes/origin/main
+          # 如果本地没有但远程有 main 分支
+          git checkout -b main origin/main
+          echo "✅ 已创建并切换到 main 分支"
+        else if git show-ref --verify --quiet refs/heads/master
+          # 尝试切换到 master 分支
+          git checkout master
+          echo "✅ 已切换到 master 分支"
+        else if git show-ref --verify --quiet refs/remotes/origin/master
+          # 如果本地没有但远程有 master 分支
+          git checkout -b master origin/master
+          echo "✅ 已创建并切换到 master 分支"
+        else
+          echo "❌ 找不到 main 或 master 分支"
+          return 1
         end
       '';
     };
