@@ -15,8 +15,8 @@
 
   # import sub modules
   imports = [
-    # nix-index + prebuilt database for command-not-found suggestions
-    nix-index-database.hmModules.nix-index
+    # nix-index + 预构建数据库（用于 command-not-found 提示）
+    nix-index-database.homeModules.nix-index
     ./nix-index.nix
     # ./shell.nix
     # ./core.nix
