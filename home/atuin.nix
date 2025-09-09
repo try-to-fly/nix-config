@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   # https://docs.atuin.sh/configuration/config/
   programs.atuin = {
     enable = true;

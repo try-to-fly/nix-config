@@ -1,4 +1,9 @@
-{ hostname, username, pkgs, ... }:
+{
+  hostname,
+  username,
+  pkgs,
+  ...
+}:
 
 #############################################################
 #
@@ -14,7 +19,7 @@
   users.users."${username}" = {
     home = "/Users/${username}";
     description = username;
-    shell = pkgs.fish;  # 设置 fish 为用户默认 shell
+    shell = pkgs.fish; # 设置 fish 为用户默认 shell
   };
 
   nix.settings.trusted-users = [ username ];

@@ -1,7 +1,11 @@
-{ username, pkgs, nix-index-database, ... }:
+{
+  username,
+  pkgs,
+  nix-index-database,
+  ...
+}:
 
 {
-
 
   home.packages = with pkgs; [
     nerd-fonts.droid-sans-mono
@@ -10,8 +14,6 @@
     nerd-fonts.symbols-only
     nerd-fonts.zed-mono
   ];
-
-
 
   # import sub modules
   imports = [

@@ -29,16 +29,16 @@
 
     # Dock configuration
     dock = {
-      autohide = true;           # auto-hide dock
-      "show-recents" = false;    # remove recent applications section
+      autohide = true; # auto-hide dock
+      "show-recents" = false; # remove recent applications section
       minimize-to-application = true;
-      mru-spaces = false;        # don’t auto-rearrange Spaces (optional but nice)
+      mru-spaces = false; # don’t auto-rearrange Spaces (optional but nice)
     };
 
     # Finder configuration
     finder = {
-      ShowStatusBar = true;      # show status bar
-      ShowPathbar = true;        # show path bar
+      ShowStatusBar = true; # show status bar
+      ShowPathbar = true; # show path bar
       _FXShowPosixPathInTitle = true; # show full POSIX path in window title
     };
 
@@ -53,8 +53,8 @@
 
     # Trackpad configuration
     trackpad = {
-      Clicking = true;               # tap to click
-      TrackpadThreeFingerDrag = true;# enable three-finger drag
+      Clicking = true; # tap to click
+      TrackpadThreeFingerDrag = true; # enable three-finger drag
     };
   };
 
@@ -63,4 +63,3 @@
     mkdir -p "/Users/${username}/Pictures/Screenshots"
   '';
 }
-

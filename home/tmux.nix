@@ -50,7 +50,6 @@
   };
 }
 
-
 /**
   plugins = with pkgs.tmuxPlugins; [
   copycat
@@ -59,7 +58,6 @@
   yank
   vim-tmux-navigator
   ];
-
 
   1. https://github.com/namishh/crystal/blob/cc37b56577e951b0c98c1a97840febdce1e39691/home/namish/conf/shell/tmux/default.nix#L4
 */

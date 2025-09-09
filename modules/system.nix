@@ -62,7 +62,7 @@
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   # this is required if you want to use darwin's default shell - zsh
-  programs.zsh.enable = false;  # 禁用 zsh 作为默认
+  programs.zsh.enable = false; # 禁用 zsh 作为默认
 
   # Enable fish shell
   programs.fish.enable = true;

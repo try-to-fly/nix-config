@@ -1,4 +1,5 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, ... }:
+{
   programs.fish = {
     enable = true;
     package = pkgs.fish;
@@ -11,7 +12,8 @@
       "cat" = "bat --paging=never";
       "ocr" = "shortcuts run ocr -i";
       # Proxy toggle aliases
-      "proxyon" = "set -gx https_proxy http://127.0.0.1:7890; set -gx http_proxy http://127.0.0.1:7890; set -gx all_proxy socks5://127.0.0.1:7890; echo Proxy enabled";
+      "proxyon" =
+        "set -gx https_proxy http://127.0.0.1:7890; set -gx http_proxy http://127.0.0.1:7890; set -gx all_proxy socks5://127.0.0.1:7890; echo Proxy enabled";
       "proxyoff" = "set -e https_proxy; set -e http_proxy; set -e all_proxy; echo Proxy disabled";
     };
 
@@ -42,7 +44,6 @@
       gco = "git checkout";
       gcb = "git checkout -b";
       gcm = "git_checkout_main";
-
 
       # git fetch
       gf = "git fetch";
@@ -245,7 +246,7 @@
       # Manually prepend Nix paths to ensure they are available.
       set -gx PATH /etc/profiles/per-user/smile/bin $PATH
       set -gx PATH /run/current-system/sw/bin $PATH
-      
+
       # 禁用conda更新检查
       set -gx CONDA_NUMBER_CHANNEL_NOTICES 0
 
