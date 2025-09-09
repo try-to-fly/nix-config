@@ -36,7 +36,8 @@
     # To avoid errors from an incorrect key, the nix-community key is commented; uncomment after verifying.
     trusted-public-keys = [
       # Official cache
-      "cache.nixos.org-1:6NCHdD59X431o0gWyp0adLpQIskS0x4VSBYp3Hg0L6s="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       # nix-community (uncomment after verifying the key string)
       # "nix-community.cachix.org-1:REPLACE_WITH_OFFICIAL_PUBLIC_KEY"
     ];
