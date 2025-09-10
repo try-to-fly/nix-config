@@ -92,6 +92,7 @@
     iperf3
     tesseract
     redis
+    xcodegen
   ];
 
   environment.shells = [
