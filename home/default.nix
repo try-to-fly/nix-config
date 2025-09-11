@@ -39,6 +39,7 @@
     # ./alacritty.nix
     ./kitty.nix
     ./wezterm.nix
+    ./zellij.nix
   ];
 
   # Home Manager needs a bit of information about you and the
