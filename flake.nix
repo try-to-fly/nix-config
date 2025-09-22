@@ -19,20 +19,20 @@
   # This is the standard format for flake.nix. `inputs` are the dependencies of the flake,
   # Each item in `inputs` will be passed as a parameter to the `outputs` function after being pulled and built.
   inputs = {
-    # Pin nixpkgs to the 25.05 Darwin branch (stable).
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
+    # Use nixpkgs unstable branch for latest packages and features.
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # home-manager, used for managing user configuration
     home-manager = {
-      # Match Home Manager with the 25.05 series for compatibility.
-      url = "github:nix-community/home-manager/release-25.05";
+      # Use Home Manager master branch for latest features.
+      url = "github:nix-community/home-manager/master";
       # Keep HM's nixpkgs input in lockstep with this flake's nixpkgs
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     darwin = {
-      # Pin nix-darwin to the 25.05 release branch to match nixpkgs
-      url = "github:lnl7/nix-darwin/nix-darwin-25.05";
+      # Use nix-darwin master branch for latest Darwin features
+      url = "github:lnl7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
