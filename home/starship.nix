@@ -8,6 +8,7 @@
     enableNushellIntegration = true;
 
     settings = {
+      right_format = "\${env_var.http_proxy}";
       battery = {
         full_symbol = "🔋 ";
         charging_symbol = "⚡️ ";
@@ -28,6 +29,13 @@
       cmd_duration = {
         min_time = 100;
         format = "take [$duration](bold yellow)";
+      };
+      env_var = {
+        http_proxy = {
+          variable = "http_proxy";
+          format = "🌐 ";
+          style = "bold green";
+        };
       };
     };
   };
