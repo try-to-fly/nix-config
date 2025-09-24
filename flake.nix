@@ -36,11 +36,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Prebuilt nix-index database for fast command-not-found suggestions
-    nix-index-database = {
-      url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     # Nix 原生 pre-commit hooks，用于提交前自动格式化等检查
     pre-commit-hooks = {

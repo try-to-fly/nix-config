@@ -1,7 +1,6 @@
 {
   username,
   pkgs,
-  nix-index-database,
   ...
 }:
 
@@ -17,9 +16,6 @@
 
   # import sub modules
   imports = [
-    # nix-index + 预构建数据库（用于 command-not-found 提示）
-    nix-index-database.homeModules.nix-index
-    ./nix-index.nix
     # ./shell.nix
     # ./core.nix
     # ./git.nix
