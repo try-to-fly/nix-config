@@ -1,60 +1,76 @@
 {
-  username,
+  lib,
   pkgs,
+  username,
   ...
 }:
 
 {
-
-  home.packages = with pkgs; [
-    nerd-fonts.droid-sans-mono
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.fira-code
-    nerd-fonts.symbols-only
-    nerd-fonts.zed-mono
-  ];
-
-  # import sub modules
+  # 导入所有共享配置（平台特定配置在各模块内部处理）
   imports = [
-    # ./shell.nix
-    # ./core.nix
-    # ./git.nix
-    ./starship.nix
-    ./yazi.nix
-    ./lazygit.nix
-    ./tmux.nix
-    ./ripgrep.nix
-    ./fd.nix
-    ./sqlite3.nix
-    ./bat.nix
-    ./fish.nix
-    ./atuin.nix
-    ./zoxide.nix
-    ./direnv.nix
-    ./git.nix
-    # ./alacritty.nix
-    ./kitty.nix
-    ./wezterm.nix
-    ./zellij.nix
+    ./shared/starship.nix
+    ./shared/yazi.nix
+    ./shared/lazygit.nix
+    ./shared/tmux.nix
+    ./shared/ripgrep.nix
+    ./shared/fd.nix
+    ./shared/sqlite3.nix
+    ./shared/bat.nix
+    ./shared/fish.nix
+    ./shared/atuin.nix
+    ./shared/zoxide.nix
+    ./shared/direnv.nix
+    ./shared/git.nix
+    ./shared/zellij.nix
+    # macOS 特定的终端应用（在模块内部判断平台）
+    ./shared/kitty.nix
+    ./shared/wezterm.nix
   ];
 
-  # Home Manager needs a bit of information about you and the
-  # paths it should manage.
-  home = {
-    username = username;
-    homeDirectory = "/Users/${username}";
+  # 平台特定的包
+  home.packages =
+    (with pkgs; [
+      # 基础字体
+      nerd-fonts.jetbrains-mono
+    ])
+    ++ lib.optionals pkgs.stdenv.isDarwin (with pkgs; [
+      # macOS 特定的字体
+      nerd-fonts.droid-sans-mono
+      nerd-fonts.fira-code
+      nerd-fonts.symbols-only
+      nerd-fonts.zed-mono
+    ])
+    ++ lib.optionals pkgs.stdenv.isLinux (with pkgs; [
+      # Linux 服务器特定的包
+      htop
+      btop
+      iotop
+      nethogs
+      curl
+      wget
+      nmap
+      tcpdump
+      iperf3
+      tree
+      rsync
+      unzip
+      p7zip
+      jq
+      yq
+      docker-compose
+    ]);
 
-    # This value determines the Home Manager release that your
-    # configuration is compatible with. This helps avoid breakage
-    # when a new Home Manager release introduces backwards
-    # incompatible changes.
-    #
-    # You can update Home Manager without changing this value. See
-    # the Home Manager release notes for a list of state version
-    # changes in each release.
-    stateVersion = "24.05";
+  # 程序配置
+  programs = {
+    home-manager.enable = true;
+  } // lib.optionalAttrs pkgs.stdenv.isLinux {
+    man.enable = true;
   };
 
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
+  # Home Manager 基本配置
+  home = {
+    username = username;
+    homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
+    stateVersion = "24.05";
+  };
 }

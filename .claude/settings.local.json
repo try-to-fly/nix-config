@@ -3,7 +3,8 @@
     "allow": [
       "Read(/Users/smile/.config/fish/functions/**)",
       "WebSearch",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(nix flake check:*)"
     ],
     "deny": [],
     "ask": []

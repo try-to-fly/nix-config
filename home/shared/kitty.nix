@@ -5,7 +5,7 @@
 }:
 ###########################################################
 #
-# Kitty Configuration
+# Kitty Configuration (macOS only)
 #
 # Useful Hot Keys for Linux(replace `ctrl + shift` with `cmd` on macOS)):
 #   1. Increase Font Size: `ctrl + shift + =` | `ctrl + shift + +`
@@ -14,7 +14,7 @@
 #
 ###########################################################
 {
-  programs.kitty = {
+  programs.kitty = lib.mkIf pkgs.stdenv.isDarwin {
     enable = true;
     package = pkgs.kitty;
     # kitty has catppuccin theme built-in,

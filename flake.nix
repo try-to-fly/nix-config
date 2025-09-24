@@ -68,10 +68,11 @@
       specialArgs = inputs // {
         inherit username useremail hostname;
       };
-      # 统一声明支持的 Darwin 架构，便于 formatter / checks / devShell 一致
+      # 统一声明支持的架构，包含 Darwin 和 Linux
       systems = [
         "aarch64-darwin"
         "x86_64-darwin"
+        "x86_64-linux"
       ];
       forAllSystems =
         f:
@@ -100,6 +101,7 @@
         { }
       else
         {
+          # macOS 配置
           darwinConfigurations."${hostname}" = darwin.lib.darwinSystem {
             inherit system specialArgs;
             modules = [
@@ -126,6 +128,27 @@
               }
             ];
           };
+
+          # Linux 服务器配置
+          nixosConfigurations."${hostname}-server" = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = specialArgs;
+            modules = [
+              ./hosts/linux-server.nix
+
+              # home manager
+              home-manager.nixosModules.home-manager
+              {
+                home-manager = {
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+                  extraSpecialArgs = specialArgs;
+                  users.${username} = import ./home;
+                };
+              }
+            ];
+          };
+
           # 提交前自动格式化（Nix 版 pre-commit hooks）
           checks = forAllSystems (
             system:

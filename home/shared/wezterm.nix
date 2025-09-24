@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
-  # Enable WezTerm via Home Manager
-  programs.wezterm = {
+  # Enable WezTerm via Home Manager (macOS only)
+  programs.wezterm = lib.mkIf pkgs.stdenv.isDarwin {
     enable = true;
     package = pkgs.wezterm;
 
