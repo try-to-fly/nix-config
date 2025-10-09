@@ -39,9 +39,18 @@ EOF
    ```
 
 2. **应用配置**:
+
+   **如果是 smile 用户**:
    ```bash
    nix run nixpkgs#home-manager -- switch --flake .#smile@linux
    ```
+
+   **如果是 root 用户**:
+   ```bash
+   nix run nixpkgs#home-manager -- switch --flake .#root@linux
+   ```
+
+   ⚠️ **注意**: 推荐创建普通用户而不是使用 root 运行。以 root 运行开发环境存在安全风险。
 
    首次运行会下载和构建大量包,请耐心等待。
 
@@ -52,7 +61,10 @@ EOF
 修改配置文件后,应用更改:
 ```bash
 cd ~/nix-config
+# smile 用户
 home-manager switch --flake .#smile@linux
+# 或者 root 用户
+home-manager switch --flake .#root@linux
 ```
 
 #### 更新软件包
@@ -61,7 +73,10 @@ home-manager switch --flake .#smile@linux
 ```bash
 cd ~/nix-config
 nix flake update
+# smile 用户
 home-manager switch --flake .#smile@linux
+# 或者 root 用户
+home-manager switch --flake .#root@linux
 ```
 
 #### 清理旧版本
@@ -142,8 +157,14 @@ sudo systemctl status nix-daemon
 ## 与其他配置的区别
 
 - **macOS (`.#smile`)**: 使用 nix-darwin + home-manager,包含系统级配置
-- **Ubuntu (`.#smile@linux`)**: 仅使用 standalone home-manager,只管理用户环境
+- **Ubuntu smile 用户 (`.#smile@linux`)**: standalone home-manager,管理 smile 用户环境
+- **Ubuntu root 用户 (`.#root@linux`)**: standalone home-manager,管理 root 用户环境
 - **NixOS (`.#smile-server`)**: 完整的系统配置,使用 `nixos-rebuild`
+
+### 用户选择建议
+
+- ✅ **推荐**: 创建普通用户(如 smile)使用 `.#smile@linux`
+- ⚠️ **不推荐**: 使用 root 用户 `.#root@linux` (仅用于测试或特殊需求)
 
 ## 自定义配置
 

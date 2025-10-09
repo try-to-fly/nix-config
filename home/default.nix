@@ -70,7 +70,13 @@
   # Home Manager 基本配置
   home = {
     username = username;
-    homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
+    homeDirectory =
+      if pkgs.stdenv.isDarwin then
+        "/Users/${username}"
+      else if username == "root" then
+        "/root"
+      else
+        "/home/${username}";
     stateVersion = "24.05";
   };
 

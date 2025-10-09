@@ -68,6 +68,11 @@
       specialArgs = inputs // {
         inherit username useremail hostname;
       };
+      # root 用户的 specialArgs (用于 Ubuntu 服务器等场景)
+      rootSpecialArgs = inputs // {
+        username = "root";
+        inherit useremail hostname;
+      };
       # 统一声明支持的架构，包含 Darwin 和 Linux
       systems = [
         "aarch64-darwin"
@@ -105,6 +110,13 @@
           homeConfigurations."${username}@linux" = home-manager.lib.homeManagerConfiguration {
             pkgs = nixpkgs.legacyPackages.x86_64-linux;
             extraSpecialArgs = specialArgs;
+            modules = [ ./home ];
+          };
+
+          # root 用户的 Home Manager 配置(用于 Ubuntu 等需要 root 运行的场景)
+          homeConfigurations."root@linux" = home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgs.legacyPackages.x86_64-linux;
+            extraSpecialArgs = rootSpecialArgs;
             modules = [ ./home ];
           };
 
