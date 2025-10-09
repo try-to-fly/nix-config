@@ -93,6 +93,7 @@
     tesseract
     redis
     xcodegen
+    coreutils
   ];
 
   environment.shells = [
