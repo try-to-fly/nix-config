@@ -101,6 +101,13 @@
         { }
       else
         {
+          # Standalone Home Manager 配置(用于非 NixOS Linux 发行版,如 Ubuntu)
+          homeConfigurations."${username}@linux" = home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgs.legacyPackages.x86_64-linux;
+            extraSpecialArgs = specialArgs;
+            modules = [ ./home ];
+          };
+
           # macOS 配置
           darwinConfigurations."${hostname}" = darwin.lib.darwinSystem {
             inherit system specialArgs;

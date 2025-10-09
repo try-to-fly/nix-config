@@ -4,7 +4,8 @@
       "Read(/Users/smile/.config/fish/functions/**)",
       "WebSearch",
       "WebFetch(domain:github.com)",
-      "Bash(nix flake check:*)"
+      "Bash(nix flake check:*)",
+      "WebFetch(domain:nix-community.github.io)"
     ],
     "deny": [],
     "ask": []

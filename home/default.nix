@@ -73,4 +73,16 @@
     homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
     stateVersion = "24.05";
   };
+
+  # 非 NixOS Linux 系统配置(如 Ubuntu)
+  targets = lib.optionalAttrs pkgs.stdenv.isLinux {
+    # 启用通用 Linux 支持,设置必要的环境变量和路径
+    genericLinux.enable = true;
+  };
+
+  # 字体配置(仅 Linux)
+  fonts = lib.optionalAttrs pkgs.stdenv.isLinux {
+    # 启用 fontconfig,让 Nix 安装的字体(如 Nerd Fonts)可被系统识别
+    fontconfig.enable = true;
+  };
 }
