@@ -11,17 +11,14 @@
     package = pkgs.git;
     lfs.enable = true;
 
-    userName = username;
-    userEmail = useremail;
-    ignores = [
-      ".DS_Store"
-    ];
-    signing = {
-      signByDefault = true;
-      key = "/Users/${username}/.ssh/id_ed25519";
-    };
-    extraConfig = {
-      gpg.format = "ssh";
+    settings = {
+      user = {
+        name = username;
+        email = useremail;
+      };
+      gpg = {
+        format = "ssh";
+      };
       core = {
         editor = "nvim";
       };
@@ -36,18 +33,27 @@
         ff = "only";
       };
     };
+    ignores = [
+      ".DS_Store"
+    ];
+    signing = {
+      signByDefault = true;
+      key = "/Users/${username}/.ssh/id_ed25519";
+    };
+  };
 
-    delta = {
-      enable = false;
-      options = {
-        line-numbers = true;
-        side-by-side = true;
-        diff-so-fancy = true;
-        navigate = true;
-      };
+  programs.delta = {
+    enable = false;
+    options = {
+      line-numbers = true;
+      side-by-side = true;
+      diff-so-fancy = true;
+      navigate = true;
     };
-    difftastic = {
-      enable = true;
-    };
+  };
+
+  programs.difftastic = {
+    enable = true;
+    git.enable = true;
   };
 }

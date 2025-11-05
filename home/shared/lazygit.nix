@@ -16,10 +16,12 @@
         shortTimeFormat = "15:04";
       };
       git = {
-        paging = {
-          colorArg = "always";
-          externalDiffCommand = "difft";
-        };
+        pagers = [
+          {
+            colorArg = "always";
+            externalDiffCommand = "difft";
+          }
+        ];
       };
       notARepository = "skip";
       startupPopupVersion = 1;
