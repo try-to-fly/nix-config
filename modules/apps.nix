@@ -132,17 +132,11 @@
       "only-switch"
       "chromium"
       "microsoft-remote-desktop"
-      "rustdesk"
       "iina"
       "stats"
-      "visual-studio-code"
       "sublime-text"
       "keka" # https://www.keka.io
-      "apifox" # https://www.apifox.com
-      "picgo"
-      "tailscale"
       "font-maple-mono-nf-cn"
-      "proxyman"
       "android-platform-tools"
     ];
   };
