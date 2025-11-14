@@ -123,6 +123,15 @@
           ps aux | grep $pattern | grep -v grep
         end
       '';
+      # 查询当前公网 IP 及其归属信息
+      ipinfo = ''
+        if not type -q curl
+          echo "❌ 未找到 curl 命令"
+          return 1
+        end
+
+        curl --silent http://ipinfo.io | jq '.'
+      '';
       take = ''
         if test -z "$argv[1]"
             echo "Usage: take <directory>"
@@ -235,7 +244,7 @@
 
       set -gx NIX_FIRST_BUILD_UID 30001
 
-      # fx 配置 https://fx.wtf/configuration 
+      # fx 配置 https://fx.wtf/configuration
       set -gx FX_SHOW_SIZE true
     '';
 
