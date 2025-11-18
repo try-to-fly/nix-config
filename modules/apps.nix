@@ -94,6 +94,7 @@
     redis
     xcodegen
     coreutils
+    fpp
   ];
 
   environment.shells = [
