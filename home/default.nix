@@ -25,6 +25,7 @@
     # macOS 特定的终端应用（在模块内部判断平台）
     ./shared/kitty.nix
     ./shared/wezterm.nix
+    ./shared/fastfetch.nix
   ];
 
   # 平台特定的包
