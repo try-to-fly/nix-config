@@ -20,7 +20,7 @@
   # Each item in `inputs` will be passed as a parameter to the `outputs` function after being pulled and built.
   inputs = {
     # Use nixpkgs unstable branch for latest packages and features.
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/master";
 
     # home-manager, used for managing user configuration
     home-manager = {
@@ -32,7 +32,7 @@
 
     darwin = {
       # Use nix-darwin master branch for latest Darwin features
-      url = "github:lnl7/nix-darwin/master";
+      url = "github:nix-darwin/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
