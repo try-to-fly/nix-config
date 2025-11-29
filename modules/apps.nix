@@ -95,6 +95,7 @@
     xcodegen
     coreutils
     fpp
+    tokei
   ];
 
   environment.shells = [
