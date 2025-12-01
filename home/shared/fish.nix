@@ -207,6 +207,39 @@
           return 1
         end
       '';
+
+      # 快速保存/撤销 WIP 提交（与 zsh 保持一致）
+      gwip = ''
+        # 确保在 git 仓库内
+        if not git rev-parse --git-dir >/dev/null 2>&1
+          echo "❌ 不在 git 仓库中"
+          return 1
+        end
+
+        git add -A
+
+        set deleted_files (git ls-files --deleted)
+        if test (count $deleted_files) -gt 0
+          git rm $deleted_files 2>/dev/null
+        end
+
+        git commit --no-verify --no-gpg-sign --message "--wip-- [skip ci]" .
+      '';
+
+      gunwip = ''
+        if not git rev-parse --git-dir >/dev/null 2>&1
+          echo "❌ 不在 git 仓库中"
+          return 1
+        end
+
+        set last_msg (git log -1 --pretty=%s 2>/dev/null)
+        if string match -q -- "*--wip--*" "$last_msg"
+          git reset HEAD~1
+          echo "✅ 已撤销最近的 WIP 提交"
+        else
+          echo "ℹ️ 最近一次提交不是 WIP，未进行任何操作"
+        end
+      '';
     };
 
     # Fish插件
