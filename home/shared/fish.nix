@@ -11,6 +11,10 @@
       "j" = "z";
       "cat" = "bat --paging=never";
       "ocr" = "shortcuts run ocr -i";
+      # ffmpeg 工具默认隐藏冗余 banner
+      "ffmpeg" = "ffmpeg -hide_banner";
+      "ffprobe" = "ffprobe -hide_banner";
+      "ffplay" = "ffplay -hide_banner";
       # Proxy toggle aliases
       "proxyon" =
         "set -gx https_proxy http://127.0.0.1:7890; set -gx http_proxy http://127.0.0.1:7890; set -gx all_proxy socks5://127.0.0.1:7890; echo Proxy enabled";
