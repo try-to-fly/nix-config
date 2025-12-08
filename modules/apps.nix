@@ -96,6 +96,9 @@
     coreutils
     fpp
     tokei
+    xh
+    hexyl
+    viddy
   ];
 
   environment.shells = [
