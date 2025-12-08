@@ -40,7 +40,7 @@
       set -g default-shell "$SHELL"
 
       set -g @no-scroll-on-exit-copy-mode 'on'
-      bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel 'pbcopy'
+      bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-no-clear 'pbcopy'
 
       bind - splitw -v -c '#{pane_current_path}' # 垂直方向新增面板，默认进入当前目录
       bind | splitw -h -c '#{pane_current_path}' # 水平方向新增面板，默认进入当前目录
