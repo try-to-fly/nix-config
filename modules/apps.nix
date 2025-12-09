@@ -99,6 +99,8 @@
     xh
     hexyl
     viddy
+    # gitui
+    doggo
   ];
 
   environment.shells = [
