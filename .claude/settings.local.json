@@ -5,7 +5,9 @@
       "WebSearch",
       "WebFetch(domain:github.com)",
       "Bash(nix flake check:*)",
-      "WebFetch(domain:nix-community.github.io)"
+      "WebFetch(domain:nix-community.github.io)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs"
     ],
     "deny": [],
     "ask": []

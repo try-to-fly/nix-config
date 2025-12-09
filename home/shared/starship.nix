@@ -27,8 +27,8 @@
         cherry_pick = "[🍒 PICKING](bold red)";
       };
       cmd_duration = {
-        min_time = 100;
-        format = "take [$duration](bold yellow)";
+        min_time = 2000;
+        format = "took [$duration](bold yellow) ";
       };
       env_var = {
         http_proxy = {
@@ -36,6 +36,43 @@
           format = "🌐 ";
           style = "bold green";
         };
+      };
+
+      # Python 版本显示
+      python = {
+        symbol = "🐍 ";
+        format = "via [\${symbol}\${pyenv_prefix}(\${version} )(\\(\$virtualenv\\) )](\$style)";
+        style = "bold yellow";
+        pyenv_version_name = true;
+      };
+
+      # Node.js 版本显示
+      nodejs = {
+        symbol = "⬢ ";
+        format = "via [\${symbol}(\${version} )](\$style)";
+        style = "bold green";
+      };
+
+      # Rust 版本显示
+      rust = {
+        symbol = "🦀 ";
+        format = "via [\${symbol}(\${version} )](\$style)";
+        style = "bold red";
+      };
+
+      # Docker 上下文显示
+      docker_context = {
+        symbol = "🐳 ";
+        format = "via [\${symbol}\${context}](\$style) ";
+        style = "blue bold";
+        only_with_files = true;
+      };
+
+      # Nix shell 显示
+      nix_shell = {
+        symbol = "❄️ ";
+        format = "via [\${symbol}\${state}( \\(\${name}\\))](\$style) ";
+        style = "bold blue";
       };
     };
   };

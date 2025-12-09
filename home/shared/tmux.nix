@@ -30,7 +30,11 @@
       }
     ];
     extraConfig = ''
+      # 图片预览支持 (yazi)
       set -gq allow-passthrough on
+      set -ga update-environment TERM
+      set -ga update-environment TERM_PROGRAM
+
       set -g visual-activity off
       set -g renumber-windows on
       set -s set-clipboard on
