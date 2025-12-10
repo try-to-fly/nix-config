@@ -27,6 +27,7 @@
       };
       push = {
         autoSetupRemote = true;
+        followTags = true;
       };
       pull = {
         rebase = true;
