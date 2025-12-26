@@ -33,6 +33,9 @@
         rebase = true;
         ff = "only";
       };
+      rerere = {
+        enabled = true;
+      };
     };
     ignores = [
       ".DS_Store"
