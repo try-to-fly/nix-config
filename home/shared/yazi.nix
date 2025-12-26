@@ -12,7 +12,11 @@
         sort_dir_first = true;
         linemode = "size";
         # 布局比例：父目录:当前:预览
-        ratio = [ 1 4 3 ];
+        ratio = [
+          1
+          4
+          3
+        ];
         sort_by = "natural";
         sort_sensitive = false;
         # 光标距离边缘的偏移
@@ -29,7 +33,10 @@
 
       opener = {
         edit = [
-          { run = ''nvim "$@"''; block = true; }
+          {
+            run = ''nvim "$@"'';
+            block = true;
+          }
         ];
       };
     };
@@ -38,7 +45,11 @@
     keymap = {
       mgr.prepend_keymap = [
         # macOS Quick Look 预览
-        { on = [ "<C-p>" ]; run = ''shell -- qlmanage -p "$@"''; desc = "Quick Look preview"; }
+        {
+          on = [ "<C-p>" ];
+          run = ''shell -- qlmanage -p "$@"'';
+          desc = "Quick Look preview";
+        }
       ];
     };
 

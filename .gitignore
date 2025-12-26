@@ -1,2 +1,8 @@
 result
 result/
+
+# Secrets - 私钥文件绝不能提交
+*.age
+keys.txt
+.env
+.env.*

@@ -36,10 +36,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-
     # Nix 原生 pre-commit hooks，用于提交前自动格式化等检查
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # sops-nix 用于安全管理密钥
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -56,6 +61,7 @@
       darwin,
       home-manager,
       pre-commit-hooks,
+      sops-nix,
       ...
     }:
     let
@@ -63,15 +69,14 @@
       username = "smile";
       system = "aarch64-darwin"; # aarch64-darwin or x86_64-darwin
       hostname = "smile";
-      useremail = "wang1234561211@outlook.com";
 
       specialArgs = inputs // {
-        inherit username useremail hostname;
+        inherit username hostname;
       };
       # root 用户的 specialArgs (用于 Ubuntu 服务器等场景)
       rootSpecialArgs = inputs // {
         username = "root";
-        inherit useremail hostname;
+        inherit hostname;
       };
       # 统一声明支持的架构，包含 Darwin 和 Linux
       systems = [
@@ -110,14 +115,20 @@
           homeConfigurations."${username}@linux" = home-manager.lib.homeManagerConfiguration {
             pkgs = nixpkgs.legacyPackages.x86_64-linux;
             extraSpecialArgs = specialArgs;
-            modules = [ ./home ];
+            modules = [
+              sops-nix.homeManagerModules.sops
+              ./home
+            ];
           };
 
           # root 用户的 Home Manager 配置(用于 Ubuntu 等需要 root 运行的场景)
           homeConfigurations."root@linux" = home-manager.lib.homeManagerConfiguration {
             pkgs = nixpkgs.legacyPackages.x86_64-linux;
             extraSpecialArgs = rootSpecialArgs;
-            modules = [ ./home ];
+            modules = [
+              sops-nix.homeManagerModules.sops
+              ./home
+            ];
           };
 
           # macOS 配置
@@ -143,6 +154,9 @@
                   useUserPackages = true;
                   extraSpecialArgs = specialArgs;
                   users.${username} = import ./home;
+                  sharedModules = [
+                    sops-nix.homeManagerModules.sops
+                  ];
                 };
               }
             ];
@@ -163,6 +177,9 @@
                   useUserPackages = true;
                   extraSpecialArgs = specialArgs;
                   users.${username} = import ./home;
+                  sharedModules = [
+                    sops-nix.homeManagerModules.sops
+                  ];
                 };
               }
             ];

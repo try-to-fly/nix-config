@@ -1,0 +1,13 @@
+# sops 配置文件
+# 定义加密密钥和规则
+
+keys:
+  # smile 的 age 公钥（从 SSH key 转换而来）
+  - &smile age1m927jq4f63n7zgsstp6tadjf7m5cv0hdfwmcpz974kragagu43fswkrva8
+
+creation_rules:
+  # 匹配 secrets 目录下的所有 yaml 文件
+  - path_regex: ^secrets/.*\.yaml$
+    key_groups:
+      - age:
+          - *smile

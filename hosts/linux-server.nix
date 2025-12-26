@@ -1,4 +1,12 @@
-{ config, lib, pkgs, username, hostname, useremail, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  username,
+  hostname,
+  useremail,
+  ...
+}:
 
 ###################################################################################
 #
@@ -60,7 +68,11 @@
   users.users.${username} = {
     isNormalUser = true;
     description = username;
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+    ];
     shell = pkgs.fish;
   };
 

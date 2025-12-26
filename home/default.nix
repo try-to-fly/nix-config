@@ -8,6 +8,7 @@
 {
   # 导入所有共享配置（平台特定配置在各模块内部处理）
   imports = [
+    ./shared/sops.nix
     ./shared/starship.nix
     ./shared/yazi.nix
     ./shared/lazygit.nix
@@ -33,38 +34,49 @@
     (with pkgs; [
       # 基础字体
       nerd-fonts.jetbrains-mono
+      # sops 相关工具
+      sops # CLI 工具，用于编辑加密的 secrets
+      age # age 加密工具，包含 age-keygen
+      ssh-to-age # 将 SSH 密钥转换为 age 密钥
     ])
-    ++ lib.optionals pkgs.stdenv.isDarwin (with pkgs; [
-      # macOS 特定的字体
-      nerd-fonts.droid-sans-mono
-      nerd-fonts.fira-code
-      nerd-fonts.symbols-only
-      nerd-fonts.zed-mono
-    ])
-    ++ lib.optionals pkgs.stdenv.isLinux (with pkgs; [
-      # Linux 服务器特定的包
-      htop
-      btop
-      iotop
-      nethogs
-      curl
-      wget
-      nmap
-      tcpdump
-      iperf3
-      tree
-      rsync
-      unzip
-      p7zip
-      jq
-      yq
-      docker-compose
-    ]);
+    ++ lib.optionals pkgs.stdenv.isDarwin (
+      with pkgs;
+      [
+        # macOS 特定的字体
+        nerd-fonts.droid-sans-mono
+        nerd-fonts.fira-code
+        nerd-fonts.symbols-only
+        nerd-fonts.zed-mono
+      ]
+    )
+    ++ lib.optionals pkgs.stdenv.isLinux (
+      with pkgs;
+      [
+        # Linux 服务器特定的包
+        htop
+        btop
+        iotop
+        nethogs
+        curl
+        wget
+        nmap
+        tcpdump
+        iperf3
+        tree
+        rsync
+        unzip
+        p7zip
+        jq
+        yq
+        docker-compose
+      ]
+    );
 
   # 程序配置
   programs = {
     home-manager.enable = true;
-  } // lib.optionalAttrs pkgs.stdenv.isLinux {
+  }
+  // lib.optionalAttrs pkgs.stdenv.isLinux {
     man.enable = true;
   };
 

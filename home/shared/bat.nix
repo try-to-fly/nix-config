@@ -15,6 +15,10 @@
       pager = "less -FR";
     };
     # 自定义语法映射
-    extraPackages = with pkgs.bat-extras; [ batdiff batman batgrep ];
+    extraPackages = with pkgs.bat-extras; [
+      batdiff
+      batman
+      batgrep
+    ];
   };
 }

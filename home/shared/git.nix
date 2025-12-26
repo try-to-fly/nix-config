@@ -1,20 +1,25 @@
 {
+  config,
   username,
-  useremail,
   pkgs,
+  lib,
   ...
 }:
 {
-
   programs.git = {
     enable = true;
     package = pkgs.git;
     lfs.enable = true;
 
+    # 包含 sops 解密的 git 配置（含 email）
+    includes = [
+      { path = config.sops.secrets.git.path; }
+    ];
+
     settings = {
       user = {
         name = username;
-        email = useremail;
+        # email 通过 sops secrets include 设置
       };
       gpg = {
         format = "ssh";
@@ -42,7 +47,8 @@
     ];
     signing = {
       signByDefault = true;
-      key = "/Users/${username}/.ssh/id_ed25519";
+      # 使用 config.home.homeDirectory 以支持跨平台
+      key = "${config.home.homeDirectory}/.ssh/id_ed25519";
     };
   };
 

@@ -7,7 +7,8 @@
       "Bash(nix flake check:*)",
       "WebFetch(domain:nix-community.github.io)",
       "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs"
+      "mcp__context7__get-library-docs",
+      "WebFetch(domain:konradmalik.com)"
     ],
     "deny": [],
     "ask": []
