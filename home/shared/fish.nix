@@ -55,12 +55,18 @@
       # git log
       glog = "git log --oneline --decorate --graph";
 
+      # git merge
+      gm = "git merge";
+
       # git pull
       gl = "git pull";
 
       # git push
       gp = "git push";
       gpsup = "git push --set-upstream origin (current_branch)";
+
+      # git cherry-pick
+      gcp = "git cherry-pick";
 
       # git status
       gst = "git status";
