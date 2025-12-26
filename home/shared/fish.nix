@@ -133,14 +133,19 @@
           ps aux | grep $pattern | grep -v grep
         end
       '';
-      # 查询当前公网 IP 及其归属信息
+      # 查询IP信息（外部IP + 局域网IP）
       ipinfo = ''
         if not type -q curl
           echo "❌ 未找到 curl 命令"
           return 1
         end
 
-        curl --silent http://ipinfo.io | jq '.'
+        # 获取局域网IP
+        set -l ip192 (ifconfig 2>/dev/null | grep "inet " | awk '{print $2}' | grep "^192\." | tr '\n' ',' | sed 's/,$//')
+        set -l ip100 (ifconfig 2>/dev/null | grep "inet " | awk '{print $2}' | grep "^100\." | tr '\n' ',' | sed 's/,$//')
+
+        # 获取外部IP并合并输出
+        curl --silent http://ipinfo.io | fx "x => ({ip: x.ip, city: x.city, region: x.region, lan: \"$ip192\", tailscale: \"$ip100\"})"
       '';
       take = ''
         if test -z "$argv[1]"
