@@ -308,6 +308,7 @@
       # Manually prepend Nix paths to ensure they are available.
       set -gx PATH /etc/profiles/per-user/smile/bin $PATH
       set -gx PATH /run/current-system/sw/bin $PATH
+      set -gx PATH $HOME/.opencode/bin $PATH
 
       # 禁用conda更新检查
       set -gx CONDA_NUMBER_CHANNEL_NOTICES 0
