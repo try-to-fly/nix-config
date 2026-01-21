@@ -298,9 +298,6 @@
       # sops age 密钥文件路径
       set -gx SOPS_AGE_KEY_FILE "$HOME/.config/sops/age/keys.txt"
 
-      # OpenAI 环境变量（从 sops 解密）
-      set -gx OPENAI_API_KEY (cat ${config.sops.secrets.openai_api_key.path})
-      set -gx OPENAI_BASE_URL (cat ${config.sops.secrets.openai_base_url.path})
     '';
 
     # Fish 交互式初始化 (等同于zsh的initContent)
