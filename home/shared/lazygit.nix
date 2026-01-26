@@ -26,6 +26,21 @@
       notARepository = "skip";
       startupPopupVersion = 1;
       reporting = "off";
+      customCommands = [
+        {
+          key = "<c-c>";
+          context = "files";
+          description = "跳过 hooks 提交 (commit --no-verify)";
+          prompts = [
+            {
+              type = "input";
+              title = "提交信息:";
+              key = "Message";
+            }
+          ];
+          command = ''git commit --no-verify -m "{{.Form.Message}}"'';
+        }
+      ];
     };
   };
 }
