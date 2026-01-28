@@ -7,27 +7,30 @@
 
 {
   # 导入所有共享配置（平台特定配置在各模块内部处理）
-  imports = [
-    ./shared/sops.nix
-    ./shared/starship.nix
-    ./shared/yazi.nix
-    ./shared/lazygit.nix
-    ./shared/tmux.nix
-    ./shared/ripgrep.nix
-    ./shared/fd.nix
-    ./shared/sqlite3.nix
-    ./shared/bat.nix
-    ./shared/fish.nix
-    ./shared/atuin.nix
-    ./shared/zoxide.nix
-    ./shared/direnv.nix
-    ./shared/git.nix
-    ./shared/zellij.nix
-    # macOS 特定的终端应用（在模块内部判断平台）
-    ./shared/kitty.nix
-    ./shared/wezterm.nix
-    ./shared/fastfetch.nix
-  ];
+  imports =
+    lib.optionals (username != "fox") [
+      ./shared/sops.nix
+    ]
+    ++ [
+      ./shared/starship.nix
+      ./shared/yazi.nix
+      ./shared/lazygit.nix
+      ./shared/tmux.nix
+      ./shared/ripgrep.nix
+      ./shared/fd.nix
+      ./shared/sqlite3.nix
+      ./shared/bat.nix
+      ./shared/fish.nix
+      ./shared/atuin.nix
+      ./shared/zoxide.nix
+      ./shared/direnv.nix
+      ./shared/git.nix
+      ./shared/zellij.nix
+      # macOS 特定的终端应用（在模块内部判断平台）
+      ./shared/kitty.nix
+      ./shared/wezterm.nix
+      ./shared/fastfetch.nix
+    ];
 
   # 平台特定的包
   home.packages =

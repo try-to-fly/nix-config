@@ -78,6 +78,15 @@
         username = "root";
         inherit hostname;
       };
+
+      # fox 用户配置
+      foxUsername = "fox";
+      foxHostname = "fox";
+
+      foxSpecialArgs = inputs // {
+        username = foxUsername;
+        hostname = foxHostname;
+      };
       # 统一声明支持的架构，包含 Darwin 和 Linux
       systems = [
         "aarch64-darwin"
@@ -157,6 +166,31 @@
                   sharedModules = [
                     sops-nix.homeManagerModules.sops
                   ];
+                };
+              }
+            ];
+          };
+
+          # fox 的 macOS 配置
+          darwinConfigurations."fox" = darwin.lib.darwinSystem {
+            system = "aarch64-darwin";
+            specialArgs = foxSpecialArgs;
+            modules = [
+              { ids.gids.nixbld = 350; }
+              ./modules/nix-core.nix
+              ./modules/system.nix
+              ./modules/macos-defaults.nix
+              ./modules/apps.nix
+              ./modules/homebrew-mirror.nix
+              ./modules/host-users.nix
+
+              home-manager.darwinModules.home-manager
+              {
+                home-manager = {
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+                  extraSpecialArgs = foxSpecialArgs;
+                  users.fox = import ./home;
                 };
               }
             ];
