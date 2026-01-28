@@ -2,17 +2,81 @@
 
 个人 Nix 配置，支持 macOS (nix-darwin) 和 Linux (NixOS/Home Manager)。
 
-## 快速开始
+## 前置依赖
+
+### 1. 安装 Nix
 
 ```bash
+# 使用清华镜像安装（国内推荐）
+sh <(curl -L https://mirrors.tuna.tsinghua.edu.cn/nix/latest/install)
+
+# 或官方源
+# sh <(curl -L https://nixos.org/nix/install)
+
+# 安装完成后重启终端
+```
+
+### 2. 安装 Homebrew
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 安装完成后按提示将 brew 添加到 PATH
+```
+
+## 快速开始
+
+### smile 用户（主配置）
+
+```bash
+# 克隆仓库
+git clone <repo-url> ~/nix-config
+cd ~/nix-config
+
 # 首次构建
-nix build .#darwinConfigurations.smile.system --no-link --extra-experimental-features 'nix-command flakes'
+nix build .#darwinConfigurations.smile.system --extra-experimental-features 'nix-command flakes'
 
 # 应用配置
 ./result/sw/bin/darwin-rebuild switch --flake .#smile
 
 # 后续更新
 darwin-rebuild switch --flake .#smile
+```
+
+### fox 用户（无 sops secrets）
+
+```bash
+# 克隆仓库
+git clone <repo-url> ~/nix-config
+cd ~/nix-config
+
+# 首次安装（需要 sudo）
+sudo nix --extra-experimental-features "nix-command flakes" run nix-darwin -- switch --flake .#fox
+
+# 后续更新
+darwin-rebuild switch --flake .#fox
+```
+
+### 配置 Fish 为默认 Shell
+
+nix-darwin 安装完成后，需要手动将 fish 设为默认 shell：
+
+```bash
+# 1. 将 fish 添加到允许的 shell 列表
+echo "/run/current-system/sw/bin/fish" | sudo tee -a /etc/shells
+
+# 2. 设置 fish 为默认 shell
+chsh -s /run/current-system/sw/bin/fish
+
+# 3. 完全退出终端应用（⌘Q），重新打开
+```
+
+如果终端仍未生效，可以在终端设置中手动指定 shell 路径为 `/run/current-system/sw/bin/fish`，或使用 nix 配置的 **kitty** / **wezterm** 终端：
+
+```bash
+open -a kitty
+# 或
+open -a wezterm
 ```
 
 ## 密钥管理 (sops-nix)

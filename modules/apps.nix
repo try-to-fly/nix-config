@@ -123,7 +123,7 @@
     };
 
     taps = [
-      "homebrew/services"
+      # homebrew/services 已废弃，服务管理功能现已内置于 brew
     ];
 
     # `brew install`
