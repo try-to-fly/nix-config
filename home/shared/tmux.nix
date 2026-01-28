@@ -5,7 +5,7 @@
     package = pkgs.tmux;
     clock24 = true;
     escapeTime = 0;
-    historyLimit = 10000;
+    historyLimit = 50000;
     aggressiveResize = true;
     baseIndex = 1;
     mouse = true;
