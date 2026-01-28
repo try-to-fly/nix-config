@@ -17,8 +17,6 @@
       # other macOS's defaults configuration.
       # ......
     };
-
-    primaryUser = "smile";
   };
 
   environment = {
