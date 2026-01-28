@@ -11,8 +11,8 @@
     package = pkgs.git;
     lfs.enable = true;
 
-    # 包含 sops 解密的 git 配置（含 email）
-    includes = [
+    # 包含 sops 解密的 git 配置（含 email），fox 用户暂不配置 sops
+    includes = lib.optionals (username != "fox") [
       { path = config.sops.secrets.git.path; }
     ];
 
