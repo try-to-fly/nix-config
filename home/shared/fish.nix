@@ -316,6 +316,10 @@
       set -gx PNPM_HOME "$HOME/.pnpm-global-packages"
       set -gx PATH "$HOME/.pnpm-global-packages" $PATH
 
+      # npm 全局配置 (避免 nix store 只读权限问题)
+      set -gx NPM_CONFIG_PREFIX "$HOME/.npm-global-packages"
+      set -gx PATH "$HOME/.npm-global-packages/bin" $PATH
+
       # 禁用conda更新检查
       set -gx CONDA_NUMBER_CHANNEL_NOTICES 0
 
@@ -359,6 +363,12 @@
     VISUAL = "nvim";
     # XDG_CONFIG_HOME = "$HOME/.config";
   };
+
+  # 自动创建 npm 和 pnpm 全局包目录
+  home.activation.createNodeGlobalDirs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p "$HOME/.npm-global-packages"
+    mkdir -p "$HOME/.pnpm-global-packages"
+  '';
 
   # 将fish添加到系统shell列表并设为默认shell (需要在macOS上手动执行)
   # 这部分需要手动执行：
