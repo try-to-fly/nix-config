@@ -303,6 +303,10 @@
       # sops age 密钥文件路径
       set -gx SOPS_AGE_KEY_FILE "$HOME/.config/sops/age/keys.txt"
 
+      # pnpm 全局配置
+      set -gx PNPM_HOME "$HOME/.pnpm-global-packages"
+      fish_add_path -g "$HOME/.pnpm-global-packages/bin"
+
     '';
 
     # Fish 交互式初始化 (等同于zsh的initContent)
