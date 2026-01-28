@@ -16,7 +16,7 @@
 {
   programs.kitty = lib.mkIf pkgs.stdenv.isDarwin {
     enable = true;
-    package = pkgs.kitty;
+    package = pkgs.emptyDirectory; # 不安装 kitty 包，仅管理配置文件
     # kitty has catppuccin theme built-in,
     # all the built-in themes are packaged into an extra package named `kitty-themes`
     # and it's installed by home-manager if `theme` is specified.
