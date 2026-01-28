@@ -315,9 +315,9 @@
       # 禁用conda更新检查
       set -gx CONDA_NUMBER_CHANNEL_NOTICES 0
 
-      # 条件加载 Homebrew 补全
-      if test -f /opt/homebrew/share/fish/vendor_completions.d/brew.fish
-        source /opt/homebrew/share/fish/vendor_completions.d/brew.fish
+      # 条件加载 Homebrew 环境变量和补全
+      if test -f /opt/homebrew/bin/brew
+        eval (/opt/homebrew/bin/brew shellenv fish)
       end
 
       # 设置fish的颜色主题
