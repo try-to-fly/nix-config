@@ -354,6 +354,11 @@
 
       # 或者使用默认的emacs模式
       fish_default_key_bindings
+
+      # 加载私密环境变量（不纳入版本控制）
+      if test -f ~/.config/fish/secrets.fish
+        source ~/.config/fish/secrets.fish
+      end
     '';
   };
 
