@@ -74,13 +74,12 @@
     graphicsmagick # http://www.graphicsmagick.org/README.html
     neofetch
     nali # 查询IP地理信息和CDN服务提供商 https://github.com/zu1k/nali
-    dogdns
     unar
     ffmpegthumbnailer
     jless
     jc
     ngrok
-    yt-dlp
+    # yt-dlp # 临时禁用：jeepney 依赖在 macOS 上构建失败
     rustc
     rustup
     cargo

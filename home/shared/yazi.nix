@@ -3,6 +3,7 @@
   programs.yazi = {
     enable = true;
     package = pkgs.yazi;
+    shellWrapperName = "y"; # 采用新的默认值
     enableZshIntegration = true;
     enableFishIntegration = true;
 
