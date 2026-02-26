@@ -56,9 +56,9 @@
     dua
     glances
     rclone
-    nodejs_22
+    nodejs_24
     nodePackages.prettier
-    corepack_22
+    corepack_24
     pm2
     python312
     python312Packages.pip
