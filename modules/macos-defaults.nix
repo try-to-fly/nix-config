@@ -1,4 +1,4 @@
-{ username, ... }:
+{ username, hostname ? "", ... }:
 
 ###################################################################################
 #
@@ -29,7 +29,8 @@
 
     # Dock configuration
     dock = {
-      autohide = true; # auto-hide dock
+      # fox: keep Dock always visible; others: auto-hide Dock
+      autohide = hostname != "fox";
       "show-recents" = false; # remove recent applications section
       minimize-to-application = true;
       mru-spaces = false; # don’t auto-rearrange Spaces (optional but nice)
