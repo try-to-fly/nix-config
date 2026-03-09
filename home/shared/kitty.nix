@@ -50,6 +50,9 @@
       map alt+left send_text all \x1b\x62
       map alt+right send_text all \x1b\x66
       modify_font cell_height 120%
+
+      # 使用 Command+点击打开链接
+      mouse_map cmd+left release grabbed,ungrabbed mouse_handle_click link
     '';
     # macOS specific settings
     darwinLaunchOptions = [ "--start-as=maximized" ];

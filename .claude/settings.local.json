@@ -8,7 +8,9 @@
       "WebFetch(domain:nix-community.github.io)",
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs",
-      "WebFetch(domain:konradmalik.com)"
+      "WebFetch(domain:konradmalik.com)",
+      "WebFetch(domain:sw.kovidgoyal.net)",
+      "WebFetch(domain:manpages.debian.org)"
     ],
     "deny": [],
     "ask": []
