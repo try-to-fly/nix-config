@@ -26,6 +26,7 @@
       ./shared/direnv.nix
       ./shared/git.nix
       ./shared/zellij.nix
+      ./shared/curl.nix
       # macOS 特定的终端应用（在模块内部判断平台）
       ./shared/kitty.nix
       ./shared/wezterm.nix
