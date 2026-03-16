@@ -10,7 +10,8 @@
       "mcp__context7__get-library-docs",
       "WebFetch(domain:konradmalik.com)",
       "WebFetch(domain:sw.kovidgoyal.net)",
-      "WebFetch(domain:manpages.debian.org)"
+      "WebFetch(domain:manpages.debian.org)",
+      "WebFetch(domain:ghostty.org)"
     ],
     "deny": [],
     "ask": []
