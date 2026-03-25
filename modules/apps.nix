@@ -101,6 +101,7 @@
     viddy
     # gitui
     doggo
+    pandoc
   ];
 
   environment.shells = [
