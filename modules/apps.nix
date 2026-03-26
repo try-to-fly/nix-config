@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  lib,
+  pkgs,
+  username,
+  ...
+}:
 {
 
   ##########################################################################
@@ -136,16 +141,15 @@
 
     # `brew install --cask`
     # TODO Feel free to add your favorite apps here.
-    casks = [
-      "only-switch"
-      "chromium"
-      "microsoft-remote-desktop"
-      "iina"
-      "stats"
-      "sublime-text"
-      "keka" # https://www.keka.io
-      "font-maple-mono-nf-cn"
-      "android-platform-tools"
-    ];
+    casks =
+      [
+        "chromium"
+        "font-maple-mono-nf-cn"
+      ]
+      ++ lib.optionals (username == "smile") [
+        "iina"
+        "sublime-text"
+        "keka" # https://www.keka.io
+      ];
   };
 }
