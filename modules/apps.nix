@@ -39,7 +39,6 @@
     nnn
     wget
     curl
-    poetry
     chafa
     ffmpeg
     exiftool
@@ -62,7 +61,6 @@
     glances
     rclone
     nodejs_24
-    nodePackages.prettier
     corepack_24
     pm2
     python312
@@ -77,13 +75,11 @@
     m-cli # https://github.com/rgcr/m-cli
     ghostscript # PDF utils https://www.ghostscript.com/
     graphicsmagick # http://www.graphicsmagick.org/README.html
-    neofetch
     nali # 查询IP地理信息和CDN服务提供商 https://github.com/zu1k/nali
     unar
     ffmpegthumbnailer
     jless
     jc
-    ngrok
     # yt-dlp # 临时禁用：jeepney 依赖在 macOS 上构建失败
     rustc
     rustup
