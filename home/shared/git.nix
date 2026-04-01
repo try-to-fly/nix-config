@@ -25,9 +25,6 @@
         // lib.optionalAttrs (username == "fox") {
           email = "991854471@qq.com";
         };
-      gpg = {
-        format = "ssh";
-      };
       core = {
         editor = "nvim";
       };
@@ -50,6 +47,7 @@
       ".DS_Store"
     ];
     signing = {
+      format = "ssh";
       signByDefault = true;
       # 使用 config.home.homeDirectory 以支持跨平台
       key = "${config.home.homeDirectory}/.ssh/id_ed25519";
