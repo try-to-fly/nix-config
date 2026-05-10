@@ -11,11 +11,9 @@
     mouse = true;
     prefix = "`";
     keyMode = "vi";
-    shortcut = "q";
     sensibleOnTop = true;
     terminal = "screen-256color";
     plugins = with pkgs.tmuxPlugins; [
-      sensible
       sidebar
       continuum
       {
@@ -37,6 +35,9 @@
 
       set -g visual-activity off
       set -g renumber-windows on
+      # tmux 3.6a 的默认值就是 3000ms；这里保留是为了显式说明语义。
+      # 如果想明显感知前缀超时，需要改成更小的值，例如 500 或 800。
+      set -g prefix-timeout 3000
       set -s set-clipboard on
 
       # fix tmux default shell : https://github.com/nix-community/home-manager/issues/5952
