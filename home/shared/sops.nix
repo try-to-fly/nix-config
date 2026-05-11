@@ -2,13 +2,23 @@
   config,
   pkgs,
   lib,
+  username,
   ...
 }:
 
 {
   sops = {
-    # age 密钥文件位置
-    age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+    # smile 的 macOS 首次安装直接使用现有 SSH 私钥解密 secrets；
+    # 其他平台继续使用手动准备的 age key 文件。
+    age =
+      if username == "smile" && pkgs.stdenv.isDarwin then
+        {
+          sshKeyPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
+        }
+      else
+        {
+          keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+        };
 
     # 默认 secrets 文件
     defaultSopsFile = ../../secrets/secrets.yaml;

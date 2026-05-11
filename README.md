@@ -90,12 +90,12 @@ open -a wezterm
 git clone <repo> && cd nix-config
 
 # 2. 确保 SSH key 已存在（~/.ssh/id_ed25519）
+# smile 的 macOS 配置会直接使用这个 SSH 私钥解密 sops secrets
 
-# 3. 生成 age 私钥（用于解密 secrets）
-nix-shell -p ssh-to-age
-mkdir -p ~/.config/sops/age
-ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt
-chmod 600 ~/.config/sops/age/keys.txt
+# 3. 校验 SSH 公钥对应的 age recipient
+# 输出需要匹配 .sops.yaml 里的 smile recipient:
+# age1m927jq4f63n7zgsstp6tadjf7m5cv0hdfwmcpz974kragagu43fswkrva8
+ssh-to-age -i ~/.ssh/id_ed25519.pub
 
 # 4. 应用配置
 darwin-rebuild switch --flake .#smile

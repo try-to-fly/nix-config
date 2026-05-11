@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  username,
   ...
 }:
 {
@@ -300,8 +301,18 @@
       # fx 配置 https://fx.wtf/configuration
       set -gx FX_SHOW_SIZE true
 
-      # sops age 密钥文件路径
-      set -gx SOPS_AGE_KEY_FILE "$HOME/.config/sops/age/keys.txt"
+      ${
+        if username == "smile" && pkgs.stdenv.isDarwin then
+          ''
+            # sops SSH 私钥路径
+            set -gx SOPS_AGE_SSH_PRIVATE_KEY_FILE "$HOME/.ssh/id_ed25519"
+          ''
+        else
+          ''
+            # sops age 密钥文件路径
+            set -gx SOPS_AGE_KEY_FILE "$HOME/.config/sops/age/keys.txt"
+          ''
+      }
 
     '';
 
