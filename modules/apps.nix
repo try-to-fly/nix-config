@@ -25,6 +25,9 @@
   # Related Discussion: https://discourse.nixos.org/t/darwin-again/29331
   environment.systemPackages = with pkgs; [
     neovim # https://github.com/neovim/neovim
+    nil # https://github.com/oxalica/nil
+    nixfmt-rfc-style # https://github.com/NixOS/nixfmt
+    statix # https://github.com/oppiliappan/statix
     lazydocker # https://github.com/jesseduffield/lazydocker
     jq # https://github.com/jqlang/jq
     imagemagick # https://github.com/ImageMagick/ImageMagick
@@ -138,15 +141,14 @@
 
     # `brew install --cask`
     # TODO Feel free to add your favorite apps here.
-    casks =
-      [
-        "chromium" # https://chromium.googlesource.com/chromium/src
-        "font-maple-mono-nf-cn" # https://github.com/subframe7536/Maple-font
-      ]
-      ++ lib.optionals (username == "smile") [
-        "iina" # https://github.com/iina/iina
-        "sublime-text" # https://www.sublimetext.com/
-        "keka" # https://github.com/aonez/Keka
-      ];
+    casks = [
+      "chromium" # https://chromium.googlesource.com/chromium/src
+      "font-maple-mono-nf-cn" # https://github.com/subframe7536/Maple-font
+    ]
+    ++ lib.optionals (username == "smile") [
+      "iina" # https://github.com/iina/iina
+      "sublime-text" # https://www.sublimetext.com/
+      "keka" # https://github.com/aonez/Keka
+    ];
   };
 }
