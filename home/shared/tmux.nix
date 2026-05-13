@@ -12,7 +12,7 @@
     prefix = "`";
     keyMode = "vi";
     sensibleOnTop = true;
-    terminal = "screen-256color";
+    terminal = "tmux-256color";
     plugins = with pkgs.tmuxPlugins; [
       sidebar
       continuum
@@ -30,7 +30,6 @@
     extraConfig = ''
       # 图片预览支持 (yazi)
       set -gq allow-passthrough on
-      set -ga update-environment TERM
       set -ga update-environment TERM_PROGRAM
 
       set -g visual-activity off
