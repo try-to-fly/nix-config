@@ -50,6 +50,7 @@
           type = "cpu";
           key = "CPU";
           keyIcon = "🖥️";
+          temp = true;
         }
         {
           type = "gpu";
