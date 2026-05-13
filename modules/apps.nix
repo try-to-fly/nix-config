@@ -107,6 +107,7 @@
     doggo # https://github.com/mr-karan/doggo
     pandoc # https://github.com/jgm/pandoc
     platformio
+    mihomo
   ];
 
   environment.shells = [
