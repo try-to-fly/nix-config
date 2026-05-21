@@ -27,7 +27,7 @@ in
       "ffplay" = "ffplay -hide_banner";
       # Proxy toggle aliases
       "codex" =
-        "HTTP_PROXY=http://127.0.0.1:7890 HTTPS_PROXY=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 ALL_PROXY=http://127.0.0.1:7890 all_proxy=http://127.0.0.1:7890 codex";
+        "HTTP_PROXY=http://127.0.0.1:7890 HTTPS_PROXY=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 ALL_PROXY=http://127.0.0.1:7890 all_proxy=http://127.0.0.1:7890 command codex";
       "proxyon" =
         "set -gx https_proxy http://127.0.0.1:7890; set -gx http_proxy http://127.0.0.1:7890; set -gx all_proxy socks5://127.0.0.1:7890; echo Proxy enabled";
       "proxyoff" = "set -e https_proxy; set -e http_proxy; set -e all_proxy; echo Proxy disabled";
