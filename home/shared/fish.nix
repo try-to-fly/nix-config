@@ -5,6 +5,10 @@
   username,
   ...
 }:
+let
+  pnpmHome = "${config.home.homeDirectory}/.pnpm-global-packages";
+  npmPrefix = "${config.home.homeDirectory}/.npm-global-packages";
+in
 {
   programs.fish = {
     enable = true;
@@ -327,12 +331,12 @@
       set -gx PATH $HOME/.opencode/bin $PATH
 
       # pnpm 全局配置
-      set -gx PNPM_HOME "$HOME/.pnpm-global-packages"
+      set -gx PNPM_HOME "${pnpmHome}"
       set -gx PATH "$PNPM_HOME/bin" $PATH
 
       # npm 全局配置 (避免 nix store 只读权限问题)
-      set -gx NPM_CONFIG_PREFIX "$HOME/.npm-global-packages"
-      set -gx PATH "$HOME/.npm-global-packages/bin" $PATH
+      set -gx NPM_CONFIG_PREFIX "${npmPrefix}"
+      set -gx PATH "$NPM_CONFIG_PREFIX/bin" $PATH
 
       # 禁用conda更新检查
       set -gx CONDA_NUMBER_CHANNEL_NOTICES 0
@@ -379,14 +383,23 @@
   # 设置环境变量
   home.sessionVariables = {
     EDITOR = "nvim";
+    NPM_CONFIG_PREFIX = npmPrefix;
+    PNPM_HOME = pnpmHome;
     VISUAL = "nvim";
     # XDG_CONFIG_HOME = "$HOME/.config";
   };
 
+  # pnpm 11 在 macOS 上把 user config 写到这里，固定全局 bin 目录避免重启后漂移。
+  home.file = lib.optionalAttrs pkgs.stdenv.isDarwin {
+    "Library/Preferences/pnpm/config.yaml".text = ''
+      globalBinDir: ${pnpmHome}/bin
+    '';
+  };
+
   # 自动创建 npm 和 pnpm 全局包目录
   home.activation.createNodeGlobalDirs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p "$HOME/.npm-global-packages"
-    mkdir -p "$HOME/.pnpm-global-packages/bin"
+    mkdir -p "${npmPrefix}"
+    mkdir -p "${pnpmHome}/bin"
   '';
 
   # 将fish添加到系统shell列表并设为默认shell (需要在macOS上手动执行)
