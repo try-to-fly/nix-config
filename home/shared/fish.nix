@@ -8,6 +8,9 @@
 let
   pnpmHome = "${config.home.homeDirectory}/.pnpm-global-packages";
   npmPrefix = "${config.home.homeDirectory}/.npm-global-packages";
+  postgresDocumentsDir = "${config.home.homeDirectory}/Documents";
+  postgresDataDir = "${postgresDocumentsDir}/postgres-data";
+  postgresLogFile = "${postgresDocumentsDir}/postgres.log";
 in
 {
   programs.fish = {
@@ -144,6 +147,46 @@ in
         function psgrep --argument-names pattern
           ps aux | grep $pattern | grep -v grep
         end
+      '';
+
+      # 本地 PostgreSQL 开发服务
+      pgstart = ''
+        set -l pg_data_dir "${postgresDataDir}"
+        set -l pg_log_file "${postgresLogFile}"
+        set -l pg_user "${username}"
+        set -l pg_database "${username}"
+        set -l pg_url "postgresql://$pg_user:@localhost:5432/$pg_database"
+        set -l pg_initdb (realpath (command -v initdb))
+        set -l pg_bin_dir (dirname "$pg_initdb")
+        set -l pg_package_dir (dirname "$pg_bin_dir")
+
+        mkdir -p "${postgresDocumentsDir}"
+
+        if not test -f "$pg_data_dir/PG_VERSION"
+          "$pg_initdb" -D "$pg_data_dir" -U "$pg_user" -L "$pg_package_dir/share/postgresql"; or return 1
+        end
+
+        "$pg_bin_dir/pg_ctl" -D "$pg_data_dir" status >/dev/null 2>&1
+        if test $status -ne 0
+          "$pg_bin_dir/pg_ctl" -D "$pg_data_dir" -l "$pg_log_file" -o "-c listen_addresses=localhost -p 5432" start; or return 1
+        end
+
+        "$pg_bin_dir/createdb" -h localhost -p 5432 -U "$pg_user" "$pg_database" >/dev/null 2>&1; or true
+        "$pg_bin_dir/psql" -h localhost -p 5432 -U "$pg_user" -d "$pg_database" -c "select 1" >/dev/null 2>&1; or return 1
+
+        echo "$pg_url"
+      '';
+
+      pgstop = ''
+        set -l pg_data_dir "${postgresDataDir}"
+        set -l pg_ctl (dirname (realpath (command -v pg_ctl)))/pg_ctl
+
+        if not test -f "$pg_data_dir/PG_VERSION"
+          echo "PostgreSQL 数据目录不存在: $pg_data_dir"
+          return 1
+        end
+
+        "$pg_ctl" -D "$pg_data_dir" stop
       '';
 
       # 查询IP信息（外部IP + 局域网IP）
@@ -326,7 +369,7 @@ in
     # Fish 交互式初始化 (等同于zsh的initContent)
     interactiveShellInit = ''
       # Manually prepend Nix paths to ensure they are available.
-      set -gx PATH /etc/profiles/per-user/smile/bin $PATH
+      set -gx PATH /etc/profiles/per-user/${username}/bin $PATH
       set -gx PATH /run/current-system/sw/bin $PATH
       set -gx PATH $HOME/.opencode/bin $PATH
 
