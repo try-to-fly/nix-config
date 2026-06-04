@@ -1,41 +1,32 @@
 { pkgs, username, ... }:
 
 let
-  mihomoSetLocalDns = ''
-    /usr/sbin/networksetup -setdnsservers Wi-Fi 127.0.0.1 || true
+  mihomoSetLocalDns = pkgs.writeShellScript "mihomo-set-local-dns" ''
+    /usr/sbin/networksetup -setdnsservers Wi-Fi 127.0.0.1
     /usr/bin/dscacheutil -flushcache || true
     /usr/bin/killall -HUP mDNSResponder || true
   '';
 
-  mihomoSetAutoDns = ''
-    /usr/sbin/networksetup -setdnsservers Wi-Fi Empty || true
+  mihomoSetAutoDns = pkgs.writeShellScript "mihomo-set-auto-dns" ''
+    /usr/sbin/networksetup -setdnsservers Wi-Fi Empty
     /usr/bin/dscacheutil -flushcache || true
     /usr/bin/killall -HUP mDNSResponder || true
   '';
 
-  mihomoRunner = ''
-    set -eu
-
-    /bin/wait4path /run/current-system/sw/bin/mihomo
-    /bin/wait4path /Users/${username}/.config/mihomo/config.yaml
-
+  mihomoRunner = pkgs.writeShellScript "mihomo-runner" ''
     ${mihomoSetAutoDns}
-
     exec /run/current-system/sw/bin/mihomo \
       -d /Users/${username}/.config/mihomo \
       -f /Users/${username}/.config/mihomo/config.yaml
   '';
 
-  mihomoDnsSync = ''
-    /bin/wait4path /run/current-system/sw/bin/curl
-    /bin/wait4path /run/current-system/sw/bin/jq
-
+  mihomoDnsSync = pkgs.writeShellScript "mihomo-dns-sync" ''
     current=""
 
     while true; do
       tun="$(
-        /run/current-system/sw/bin/curl -fsS --max-time 2 http://127.0.0.1:9090/configs 2>/dev/null \
-          | /run/current-system/sw/bin/jq -r '.tun.enable // false' 2>/dev/null \
+        ${pkgs.curl}/bin/curl -fsS --max-time 2 http://127.0.0.1:9090/configs \
+          | ${pkgs.jq}/bin/jq -r '.tun.enable // false' 2>/dev/null \
           || echo false
       )"
 
@@ -120,10 +111,9 @@ in
   launchd.daemons.mihomo = {
     serviceConfig = {
       ProgramArguments = [
-        "/bin/sh"
-        "-c"
-        mihomoRunner
+        "${mihomoRunner}"
       ];
+      WorkingDirectory = "/Users/${username}/.config/mihomo";
       EnvironmentVariables = {
         PATH = "/run/current-system/sw/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin";
       };
@@ -137,9 +127,7 @@ in
   launchd.daemons.mihomo-dns-sync = {
     serviceConfig = {
       ProgramArguments = [
-        "/bin/sh"
-        "-c"
-        mihomoDnsSync
+        "${mihomoDnsSync}"
       ];
       RunAtLoad = true;
       KeepAlive = true;
