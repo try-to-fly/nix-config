@@ -1,4 +1,4 @@
-{ pkgs, username, ... }:
+{ pkgs, ... }:
 
 ###################################################################################
 #
@@ -55,26 +55,6 @@
       KeepAlive = false;
       StandardOutPath = "/var/log/nix-darwin-activation-check.log";
       StandardErrorPath = "/var/log/nix-darwin-activation-check.error.log";
-    };
-  };
-
-  launchd.daemons.mihomo = {
-    serviceConfig = {
-      ProgramArguments = [
-        "/run/current-system/sw/bin/mihomo"
-        "-d"
-        "/Users/${username}/.config/mihomo"
-        "-f"
-        "/Users/${username}/.config/mihomo/config.yaml"
-      ];
-      WorkingDirectory = "/Users/${username}/.config/mihomo";
-      EnvironmentVariables = {
-        PATH = "/run/current-system/sw/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin";
-      };
-      RunAtLoad = true;
-      KeepAlive = true;
-      StandardOutPath = "/var/log/mihomo.log";
-      StandardErrorPath = "/var/log/mihomo.error.log";
     };
   };
 
