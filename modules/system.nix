@@ -1,55 +1,5 @@
 { pkgs, username, ... }:
 
-let
-  mihomoSetLocalDns = pkgs.writeShellScript "mihomo-set-local-dns" ''
-    /usr/sbin/networksetup -setdnsservers Wi-Fi 127.0.0.1
-    /usr/bin/dscacheutil -flushcache || true
-    /usr/bin/killall -HUP mDNSResponder || true
-  '';
-
-  mihomoSetAutoDns = pkgs.writeShellScript "mihomo-set-auto-dns" ''
-    /usr/sbin/networksetup -setdnsservers Wi-Fi Empty
-    /usr/bin/dscacheutil -flushcache || true
-    /usr/bin/killall -HUP mDNSResponder || true
-  '';
-
-  mihomoRunner = pkgs.writeShellScript "mihomo-runner" ''
-    ${mihomoSetAutoDns}
-    exec /run/current-system/sw/bin/mihomo \
-      -d /Users/${username}/.config/mihomo \
-      -f /Users/${username}/.config/mihomo/config.yaml
-  '';
-
-  mihomoDnsSync = pkgs.writeShellScript "mihomo-dns-sync" ''
-    current=""
-
-    while true; do
-      tun="$(
-        ${pkgs.curl}/bin/curl -fsS --max-time 2 http://127.0.0.1:9090/configs \
-          | ${pkgs.jq}/bin/jq -r '.tun.enable // false' 2>/dev/null \
-          || echo false
-      )"
-
-      if [ "$tun" = "true" ]; then
-        desired="local"
-      else
-        desired="auto"
-      fi
-
-      if [ "$desired" != "$current" ]; then
-        if [ "$desired" = "local" ]; then
-          ${mihomoSetLocalDns}
-        else
-          ${mihomoSetAutoDns}
-        fi
-        current="$desired"
-      fi
-
-      sleep 2
-    done
-  '';
-in
-
 ###################################################################################
 #
 #  macOS's System configuration
@@ -111,7 +61,11 @@ in
   launchd.daemons.mihomo = {
     serviceConfig = {
       ProgramArguments = [
-        "${mihomoRunner}"
+        "/run/current-system/sw/bin/mihomo"
+        "-d"
+        "/Users/${username}/.config/mihomo"
+        "-f"
+        "/Users/${username}/.config/mihomo/config.yaml"
       ];
       WorkingDirectory = "/Users/${username}/.config/mihomo";
       EnvironmentVariables = {
@@ -121,18 +75,6 @@ in
       KeepAlive = true;
       StandardOutPath = "/var/log/mihomo.log";
       StandardErrorPath = "/var/log/mihomo.error.log";
-    };
-  };
-
-  launchd.daemons.mihomo-dns-sync = {
-    serviceConfig = {
-      ProgramArguments = [
-        "${mihomoDnsSync}"
-      ];
-      RunAtLoad = true;
-      KeepAlive = true;
-      StandardOutPath = "/var/log/mihomo-dns-sync.log";
-      StandardErrorPath = "/var/log/mihomo-dns-sync.error.log";
     };
   };
 
