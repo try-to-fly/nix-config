@@ -19,7 +19,7 @@
       {
         plugin = dracula;
         extraConfig = ''
-          set -g @dracula-plugins "battery cpu-usage ram-usage ssh-session"
+          set -g @dracula-plugins "ssh-session"
           set -g @dracula-show-flags true
           set -g @dracula-show-fahrenheit false
           set -g @dracula-fixed-location "Hangzhou"
