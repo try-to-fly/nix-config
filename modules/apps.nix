@@ -66,11 +66,10 @@
     nodejs_24 # https://github.com/nodejs/node
     corepack_24 # https://github.com/nodejs/corepack
     pm2 # https://github.com/Unitech/pm2
-    python312 # https://github.com/python/cpython
+    (python312.withPackages (ps: with ps; [ pyyaml ])) # https://github.com/python/cpython
     python312Packages.pip # https://github.com/pypa/pip
     python312Packages.git-filter-repo # https://github.com/newren/git-filter-repo
     python312Packages.pipx # https://github.com/pypa/pipx
-    python312Packages.pyyaml # https://github.com/yaml/pyyaml
     lua # https://www.lua.org
     luarocks # https://github.com/luarocks/luarocks
     lla # https://github.com/chaqchase/lla
