@@ -11,6 +11,8 @@ let
   postgresDocumentsDir = "${config.home.homeDirectory}/Documents";
   postgresDataDir = "${postgresDocumentsDir}/postgres-data";
   postgresLogFile = "${postgresDocumentsDir}/postgres.log";
+  redisDataDir = "${postgresDocumentsDir}/redis-data";
+  redisLogFile = "${postgresDocumentsDir}/redis.log";
 in
 {
   programs.fish = {
@@ -29,8 +31,6 @@ in
       "ffprobe" = "ffprobe -hide_banner";
       "ffplay" = "ffplay -hide_banner";
       # Proxy toggle aliases
-      "codex" =
-        "HTTP_PROXY=http://127.0.0.1:7890 HTTPS_PROXY=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 ALL_PROXY=http://127.0.0.1:7890 all_proxy=http://127.0.0.1:7890 command codex";
       "proxyon" =
         "set -gx https_proxy http://127.0.0.1:7890; set -gx http_proxy http://127.0.0.1:7890; set -gx all_proxy socks5://127.0.0.1:7890; echo Proxy enabled";
       "proxyoff" = "set -e https_proxy; set -e http_proxy; set -e all_proxy; echo Proxy disabled";
@@ -187,6 +187,39 @@ in
         end
 
         "$pg_ctl" -D "$pg_data_dir" stop
+      '';
+
+      # 本地 Redis 开发服务
+      "redis-start" = ''
+        set -l redis_data_dir "${redisDataDir}"
+        set -l redis_log_file "${redisLogFile}"
+        set -l redis_host "127.0.0.1"
+        set -l redis_port "6379"
+        set -l redis_url "redis://$redis_host:$redis_port"
+
+        mkdir -p "$redis_data_dir"
+
+        redis-cli -h "$redis_host" -p "$redis_port" ping >/dev/null 2>&1
+        if test $status -eq 0
+          echo "$redis_url"
+          return 0
+        end
+
+        redis-server \
+          --daemonize yes \
+          --bind "$redis_host" \
+          --port "$redis_port" \
+          --dir "$redis_data_dir" \
+          --logfile "$redis_log_file"; or return 1
+
+        echo "$redis_url"
+      '';
+
+      "redis-stop" = ''
+        set -l redis_host "127.0.0.1"
+        set -l redis_port "6379"
+
+        redis-cli -h "$redis_host" -p "$redis_port" shutdown
       '';
 
       # 查询IP信息（外部IP + 局域网IP）
