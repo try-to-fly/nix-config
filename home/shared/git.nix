@@ -27,6 +27,23 @@
       core = {
         editor = "nvim";
       };
+      branch = {
+        sort = "-committerdate";
+      };
+      checkout = {
+        defaultRemote = "origin";
+      };
+      commit = {
+        verbose = true;
+      };
+      diff = {
+        algorithm = "histogram";
+        colorMoved = "zebra";
+        colorMovedWS = "allow-indentation-change";
+      };
+      fetch = {
+        prune = true;
+      };
       http = {
         proxy = "http://127.0.0.1:7890";
       };
@@ -48,6 +65,21 @@
       };
       rerere = {
         enabled = true;
+      };
+      merge = {
+        conflictStyle = "zdiff3";
+      };
+      safe = {
+        bareRepository = "explicit";
+      };
+      status = {
+        showStash = true;
+      };
+      tag = {
+        sort = "-version:refname";
+      };
+      worktree = {
+        guessRemote = true;
       };
     };
     ignores = [
