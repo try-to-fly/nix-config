@@ -17,14 +17,13 @@
     ];
 
     settings = {
-      user =
-        {
-          name = username;
-          # 除 fox 外，email 通过 sops secrets include 设置
-        }
-        // lib.optionalAttrs (username == "fox") {
-          email = "991854471@qq.com";
-        };
+      user = {
+        name = username;
+        # 除 fox 外，email 通过 sops secrets include 设置
+      }
+      // lib.optionalAttrs (username == "fox") {
+        email = "991854471@qq.com";
+      };
       core = {
         editor = "nvim";
       };
@@ -43,7 +42,9 @@
       };
       pull = {
         rebase = true;
-        ff = "only";
+      };
+      rebase = {
+        autoStash = true;
       };
       rerere = {
         enabled = true;
