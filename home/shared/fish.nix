@@ -405,6 +405,7 @@ in
       set -gx PATH /etc/profiles/per-user/${username}/bin $PATH
       set -gx PATH /run/current-system/sw/bin $PATH
       set -gx PATH $HOME/.opencode/bin $PATH
+      set -gx PATH $HOME/.grok/bin $PATH
 
       # pnpm 全局配置
       set -gx PNPM_HOME "${pnpmHome}"
