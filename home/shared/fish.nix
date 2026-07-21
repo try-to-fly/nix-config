@@ -460,6 +460,7 @@ in
   # 设置环境变量
   home.sessionVariables = {
     EDITOR = "nvim";
+    DEVELOPER_DIR = "/Applications/Xcode-beta.app/Contents/Developer";
     NPM_CONFIG_PREFIX = npmPrefix;
     PNPM_HOME = pnpmHome;
     VISUAL = "nvim";
