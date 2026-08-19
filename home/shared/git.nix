@@ -93,6 +93,18 @@
     };
   };
 
+  # programs.git 把 ~/.config/git/config 做成 store symlink，git config --global
+  # 会写那个只读文件。只要 ~/.gitconfig 存在，--global 就改它；Git 仍会同时读两份。
+  # 不要用 home.file 托管 ~/.gitconfig，否则又会变成只读 symlink。
+  home.activation.ensureWritableGitconfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    gitconfig="${config.home.homeDirectory}/.gitconfig"
+    if [[ ! -e "$gitconfig" ]]; then
+      touch "$gitconfig"
+    elif [[ -L "$gitconfig" ]]; then
+      echo "warning: $gitconfig is a symlink; git config --global will not be writable" >&2
+    fi
+  '';
+
   programs.delta = {
     enable = false;
     options = {
