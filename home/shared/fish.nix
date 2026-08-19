@@ -402,6 +402,7 @@ in
     # Fish 交互式初始化 (等同于zsh的initContent)
     interactiveShellInit = ''
       # Manually prepend Nix paths to ensure they are available.
+      set -gx PATH /Users/smile/.local/bin $PATH
       set -gx PATH /etc/profiles/per-user/${username}/bin $PATH
       set -gx PATH /run/current-system/sw/bin $PATH
       set -gx PATH $HOME/.opencode/bin $PATH
