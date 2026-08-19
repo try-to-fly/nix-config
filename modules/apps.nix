@@ -91,7 +91,7 @@
     rustup # https://github.com/rust-lang/rustup
     cargo # https://github.com/rust-lang/cargo
     otree # https://github.com/fioncat/otree
-    postgresql # https://github.com/postgres/postgres
+    postgresql_17 # https://github.com/postgres/postgres
     aria2 # https://github.com/aria2/aria2
     go # https://github.com/golang/go
     uv # https://github.com/astral-sh/uv
@@ -146,13 +146,11 @@
     # `brew install --cask`
     # TODO Feel free to add your favorite apps here.
     casks = [
-      "chromium" # https://chromium.googlesource.com/chromium/src
       "font-maple-mono-nf-cn" # https://github.com/subframe7536/Maple-font
     ]
     ++ lib.optionals (username == "smile") [
       "iina" # https://github.com/iina/iina
       "sublime-text" # https://www.sublimetext.com/
-      "keka" # https://github.com/aonez/Keka
     ];
   };
 }
