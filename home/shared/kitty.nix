@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -69,6 +70,11 @@
       # 可写 session 文件，不要用 xdg.configFile 管理（会被 home-manager 变成只读）。
       # 文件不存在时 kitty 忽略并开默认窗口。需要 kitty >= 0.46.2（on_quit），建议 >= 0.47.3。
       startup_session = "~/.local/share/kitty/last.kitty-session";
+
+      # socket-only：外部程序（如 ProjectManage）可通过 Unix socket 在已有窗口里开 tab。
+      # 窗口内快捷键 / kitten 不受影响。改完后需要重启 Kitty 才会监听。
+      allow_remote_control = "socket-only";
+      listen_on = "unix:${config.home.homeDirectory}/.local/share/kitty/control";
 
     };
     extraConfig = ''
