@@ -65,6 +65,10 @@
       scrollback_pager_history_size = 10; # 额外保留约十万行普通文本供 pager 搜索
       enabled_layouts = "splits,stack";
       map_timeout = 3.0; # 与现有 tmux prefix-timeout 保持一致
+      watcher = "watcher.py"; # 聚焦时刷新 tab 栏；退出时保存 last session
+      # 可写 session 文件，不要用 xdg.configFile 管理（会被 home-manager 变成只读）。
+      # 文件不存在时 kitty 忽略并开默认窗口。需要 kitty >= 0.46.2（on_quit），建议 >= 0.47.3。
+      startup_session = "~/.local/share/kitty/last.kitty-session";
 
     };
     extraConfig = ''
@@ -115,6 +119,11 @@
       map --mode prefix 8 goto_tab 8
       map --mode prefix 9 goto_tab 9
 
+      # 保存当前 splits/tabs/cwd，以及窗口里正在跑的前台进程（下次会重新执行）。
+      # 若当时正在跑 rm/mv 之类命令，重启也会再跑一遍。
+      map --mode prefix s save_as_session --save-only --use-foreground-process ~/.local/share/kitty/last.kitty-session
+      map cmd+q combine : save_as_session --save-only --use-foreground-process ~/.local/share/kitty/last.kitty-session : quit
+
       modify_font cell_height 120%
 
       # 使用 Command+点击打开链接
@@ -125,9 +134,10 @@
   };
 
   # Dracula 风格 tab 状态栏：左侧笑脸在 prefix mode 中由绿色切换为黄色。
+  # Grok 任务完成时，对应 tab 变成粉色，切到该 tab 或窗口重新聚焦后恢复。
   xdg.configFile."kitty/tab_bar.py" = lib.mkIf pkgs.stdenv.isDarwin {
     text = ''
-      from kitty.fast_data_types import Screen, get_boss
+      from kitty.fast_data_types import Screen, current_focused_os_window_id, get_boss
       from kitty.tab_bar import (
           DrawData,
           ExtraData,
@@ -140,6 +150,32 @@
       DRACULA_BACKGROUND = as_rgb(0x282A36)
       DRACULA_GREEN = as_rgb(0x50FA7B)
       DRACULA_YELLOW = as_rgb(0xF1FA8C)
+      DRACULA_PINK = as_rgb(0xFF79C6)
+      GROK_DONE_RGB = 0xFF79C6
+      GROK_DONE_FG_RGB = 0x282A36
+
+
+      def grok_done_ids() -> set:
+          return getattr(get_boss(), "grok_done_window_ids", set())
+
+
+      def tab_is_grok_done(tab: TabBarData) -> bool:
+          done = grok_done_ids()
+          if not done:
+              return False
+          t = get_boss().tab_for_id(tab.tab_id)
+          if t is None:
+              return False
+          return any(w.id in done for w in t)
+
+
+      def clear_tab_grok_done(tab: TabBarData) -> None:
+          done = grok_done_ids()
+          t = get_boss().tab_for_id(tab.tab_id)
+          if t is None:
+              return
+          for w in t:
+              done.discard(w.id)
 
 
       def draw_tab(
@@ -152,6 +188,26 @@
           is_last: bool,
           extra_data: ExtraData,
       ) -> int:
+          viewed = (
+              not extra_data.for_layout
+              and tab.is_active
+              and tab.os_window_id == current_focused_os_window_id()
+          )
+          if viewed:
+              clear_tab_grok_done(tab)
+          elif tab_is_grok_done(tab):
+              screen.cursor.bg = DRACULA_PINK
+              screen.cursor.fg = DRACULA_BACKGROUND
+
+          nxt = extra_data.next_tab
+          if nxt is not None and tab_is_grok_done(nxt):
+              extra_data.next_tab = nxt._replace(
+                  inactive_bg=GROK_DONE_RGB,
+                  active_bg=GROK_DONE_RGB,
+                  inactive_fg=GROK_DONE_FG_RGB,
+                  active_fg=GROK_DONE_FG_RGB,
+              )
+
           if index == 1:
               tab_background = screen.cursor.bg
               tab_foreground = screen.cursor.fg
@@ -190,6 +246,106 @@
               is_last,
               extra_data,
           )
+    '';
+  };
+
+  xdg.configFile."kitty/notifications.py" = lib.mkIf pkgs.stdenv.isDarwin {
+    text = ''
+      from kitty.fast_data_types import current_focused_os_window_id, get_boss
+
+      SKIP_TITLES = {"Session ready"}
+      GROK_TITLES = {
+          "Turn complete",
+          "Task complete",
+          "Approval required",
+          "Agent error",
+      }
+
+
+      def is_grok_task_notice(nc) -> bool:
+          title = (nc.title or "").strip()
+          if title in SKIP_TITLES:
+              return False
+          if nc.identifier == "grok":
+              return True
+          return title in GROK_TITLES
+
+
+      def main(nc) -> bool:
+          if not is_grok_task_notice(nc):
+              return False
+          window_id = nc.channel_id
+          if not window_id:
+              return False
+          boss = get_boss()
+          done = getattr(boss, "grok_done_window_ids", None)
+          if done is None:
+              done = set()
+              boss.grok_done_window_ids = done
+          done.add(window_id)
+          window = boss.window_id_map.get(window_id)
+          if window is not None:
+              tab = window.tabref()
+              if tab is not None:
+                  tab.mark_tab_bar_dirty()
+              # Kitty 窗口已在前台时，tab 变色就够了，不再弹系统横幅。
+              if window.os_window_id == current_focused_os_window_id():
+                  return True
+          return False
+    '';
+  };
+
+  xdg.configFile."kitty/watcher.py" = lib.mkIf pkgs.stdenv.isDarwin {
+    text = ''
+      import os
+
+      SESSION_PATH = os.path.expanduser("~/.local/share/kitty/last.kitty-session")
+      _saving = False
+      _saved_for_quit = False
+
+
+      def _save_last_session(boss):
+          global _saving
+          if _saving:
+              return
+          _saving = True
+          try:
+              os.makedirs(os.path.dirname(SESSION_PATH), exist_ok=True)
+              boss.save_as_session(
+                  "--save-only",
+                  "--use-foreground-process",
+                  SESSION_PATH,
+              )
+          except Exception:
+              import traceback
+              traceback.print_exc()
+          finally:
+              _saving = False
+
+
+      def on_focus_change(boss, window, data):
+          if not data.get("focused"):
+              return
+          tab = window.tabref()
+          if tab is not None:
+              tab.mark_tab_bar_dirty()
+
+
+      def on_quit(boss, window, data):
+          global _saved_for_quit
+          _save_last_session(boss)
+          _saved_for_quit = True
+
+
+      def on_close(boss, window, data):
+          # Cmd+Q 已经在 on_quit 里写过完整布局；逐窗关闭时继续更新。
+          # 最后一个窗口关掉后不要写成空 session，下次启动还能回到关窗前的分屏。
+          if _saved_for_quit:
+              return
+          for w in boss.all_windows:
+              if w is not window:
+                  _save_last_session(boss)
+                  return
     '';
   };
 }
