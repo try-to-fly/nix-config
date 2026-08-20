@@ -120,9 +120,10 @@
       map --mode prefix 9 goto_tab 9
 
       # 保存当前 splits/tabs/cwd，以及窗口里正在跑的前台进程（下次会重新执行）。
+      # 正在跑的 grok 会写成 grok --resume <session-id>；proxyon && grok 会先开代理再 resume。
       # 若当时正在跑 rm/mv 之类命令，重启也会再跑一遍。
-      map --mode prefix s save_as_session --save-only --use-foreground-process ~/.local/share/kitty/last.kitty-session
-      map cmd+q combine : save_as_session --save-only --use-foreground-process ~/.local/share/kitty/last.kitty-session : quit
+      map --mode prefix s kitten save_session.py
+      map cmd+q kitten save_session.py --quit
 
       modify_font cell_height 120%
 
@@ -295,32 +296,191 @@
     '';
   };
 
-  xdg.configFile."kitty/watcher.py" = lib.mkIf pkgs.stdenv.isDarwin {
+  xdg.configFile."kitty/save_session.py" = lib.mkIf pkgs.stdenv.isDarwin {
     text = ''
+      import json
       import os
+      import re
+      import subprocess
+      import traceback
 
       SESSION_PATH = os.path.expanduser("~/.local/share/kitty/last.kitty-session")
+      GROK_ACTIVE_SESSIONS = os.path.expanduser("~/.grok/active_sessions.json")
       _saving = False
-      _saved_for_quit = False
+
+      _HAS_RESUME = re.compile(r"(^|[\s])(-c|--continue|--resume|-r)(\s|=|$)")
+      _GROK_CMD = re.compile(r"(^|(?:&&|\|\||;)\s*)grok(?=\s|$)")
 
 
-      def _save_last_session(boss):
+      def _load_active_grok_sessions():
+          try:
+              with open(GROK_ACTIVE_SESSIONS) as f:
+                  items = json.load(f)
+          except (OSError, json.JSONDecodeError):
+              return {}
+          if not isinstance(items, list):
+              return {}
+          items = [x for x in items if isinstance(x, dict) and x.get("pid") and x.get("session_id")]
+          items.sort(key=lambda x: x.get("opened_at") or "")
+          return {int(x["pid"]): str(x["session_id"]) for x in items}
+
+
+      def _pid_tree():
+          tree = {}
+          try:
+              out = subprocess.check_output(
+                  ["ps", "-axo", "pid=,ppid="],
+                  text=True,
+                  errors="replace",
+              )
+          except OSError:
+              return tree
+          for line in out.splitlines():
+              parts = line.split()
+              if len(parts) < 2:
+                  continue
+              try:
+                  pid, ppid = int(parts[0]), int(parts[1])
+              except ValueError:
+                  continue
+              tree.setdefault(ppid, []).append(pid)
+          return tree
+
+
+      def _proc_pid(proc):
+          if isinstance(proc, dict):
+              return proc.get("pid")
+          return getattr(proc, "pid", None)
+
+
+      def _window_pids(window):
+          pids = []
+          child = getattr(window, "child", None)
+          if child is None:
+              return pids
+          try:
+              for proc in child.foreground_processes or []:
+                  pid = _proc_pid(proc)
+                  if pid:
+                      pids.append(int(pid))
+          except Exception:
+              pass
+          for attr in ("pid_for_cwd", "pid"):
+              try:
+                  pid = getattr(child, attr)
+              except Exception:
+                  pid = None
+              if pid:
+                  pids.append(int(pid))
+          return pids
+
+
+      def _session_id_for_window(window, pid_to_sid, tree):
+          for pid in _window_pids(window):
+              sid = pid_to_sid.get(pid)
+              if sid:
+                  return sid
+          root = getattr(getattr(window, "child", None), "pid", None)
+          if not root:
+              return None
+          stack = [int(root)]
+          seen = set()
+          while stack:
+              pid = stack.pop()
+              if pid in seen:
+                  continue
+              seen.add(pid)
+              sid = pid_to_sid.get(pid)
+              if sid:
+                  return sid
+              stack.extend(tree.get(pid, ()))
+          return None
+
+
+      def _inject_grok_resume(cmd, session_id):
+          if not cmd or not session_id:
+              return cmd
+          if _HAS_RESUME.search(cmd):
+              return cmd
+          new_cmd, n = _GROK_CMD.subn(
+              lambda m: m.group(1) + "grok --resume " + session_id,
+              cmd,
+              count=1,
+          )
+          return new_cmd if n else cmd
+
+
+      def inject_grok_resume_into_windows(boss):
+          pid_to_sid = _load_active_grok_sessions()
+          if not pid_to_sid:
+              return
+          tree = _pid_tree()
+          for window in boss.all_windows:
+              sid = _session_id_for_window(window, pid_to_sid, tree)
+              if not sid:
+                  continue
+              cmd = window.last_cmd_cmdline or ""
+              if cmd and "grok" not in cmd:
+                  continue
+              if not cmd:
+                  cmd = "grok"
+              new_cmd = _inject_grok_resume(cmd, sid)
+              if new_cmd:
+                  window.last_cmd_cmdline = new_cmd
+
+
+      def save_last_session(boss):
           global _saving
           if _saving:
               return
           _saving = True
           try:
               os.makedirs(os.path.dirname(SESSION_PATH), exist_ok=True)
+              inject_grok_resume_into_windows(boss)
               boss.save_as_session(
                   "--save-only",
                   "--use-foreground-process",
                   SESSION_PATH,
               )
           except Exception:
-              import traceback
               traceback.print_exc()
           finally:
               _saving = False
+
+
+      def main(args):
+          pass
+
+
+      from kittens.tui.handler import result_handler
+
+
+      @result_handler(no_ui=True)
+      def handle_result(args, answer, target_window_id, boss):
+          save_last_session(boss)
+          if "--quit" in args:
+              boss.quit()
+    '';
+  };
+
+  xdg.configFile."kitty/watcher.py" = lib.mkIf pkgs.stdenv.isDarwin {
+    text = ''
+      import importlib.util
+      import os
+
+      _saved_for_quit = False
+
+
+      def _session_save():
+          path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "save_session.py")
+          spec = importlib.util.spec_from_file_location("kitty_save_session", path)
+          mod = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+          return mod
+
+
+      def _save_last_session(boss):
+          _session_save().save_last_session(boss)
 
 
       def on_focus_change(boss, window, data):
@@ -338,8 +498,6 @@
 
 
       def on_close(boss, window, data):
-          # Cmd+Q 已经在 on_quit 里写过完整布局；逐窗关闭时继续更新。
-          # 最后一个窗口关掉后不要写成空 session，下次启动还能回到关窗前的分屏。
           if _saved_for_quit:
               return
           for w in boss.all_windows:
