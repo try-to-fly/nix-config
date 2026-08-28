@@ -88,8 +88,9 @@
       map --mode prefix ` send_text all \x60
 
       # kitty 的 window 对应 tmux pane，kitty 的 tab 对应 tmux window。
-      map --mode prefix - launch --location=hsplit --cwd=current
-      map --mode prefix | launch --location=vsplit --cwd=current
+      # hsplit/vsplit 只在 splits 布局生效；session 恢复后若停在 stack，先切回 splits 再分屏。
+      map --mode prefix - combine : goto_layout splits : launch --location=hsplit --cwd=current
+      map --mode prefix | combine : goto_layout splits : launch --location=vsplit --cwd=current
       map --mode prefix left neighboring_window left
       map --mode prefix right neighboring_window right
       map --mode prefix up neighboring_window up
@@ -97,7 +98,8 @@
       map --mode prefix o next_window
       map --mode prefix q focus_visible_window
       map --mode prefix x close_window_with_confirmation
-      map --mode prefix z toggle_layout stack
+      # toggle_layout stack 依赖进程内的 last_used_layout；0.48.2 恢复 session 后这项是空的，prefix+z 会变成空操作。
+      map --mode prefix z kitten toggle_zoom.py
 
       # 滚屏浏览、搜索与原生 hints 摘取。
       map --mode prefix [ show_scrollback
@@ -435,14 +437,53 @@
                   window.last_cmd_cmdline = new_cmd
 
 
+      def _layout_basename(tab):
+          name = getattr(tab, "_current_layout_name", None)
+          if not name:
+              layout = getattr(tab, "current_layout", None)
+              name = getattr(layout, "name", "") if layout is not None else ""
+          return (name or "").split(":")[0]
+
+
+      def _iter_tabs(boss):
+          for tm in (getattr(boss, "os_window_map", None) or {}).values():
+              for tab in tm:
+                  yield tab
+
+
+      def _swap_stack_tabs_to_splits(boss):
+          # 只换当前 layout 对象，不 relayout，屏幕上的 zoom 不变。
+          swapped = []
+          for tab in _iter_tabs(boss):
+              if _layout_basename(tab) != "stack":
+                  continue
+              setter = getattr(tab, "_set_current_layout", None)
+              if setter is None:
+                  continue
+              setter("splits")
+              swapped.append(tab)
+          return swapped
+
+
+      def _restore_stack_tabs(tabs):
+          for tab in tabs:
+              setter = getattr(tab, "_set_current_layout", None)
+              if setter is not None:
+                  setter("stack")
+
+
       def save_last_session(boss):
           global _saving
           if _saving:
               return
           _saving = True
+          swapped = []
           try:
               os.makedirs(os.path.dirname(SESSION_PATH), exist_ok=True)
               inject_grok_resume_into_windows(boss)
+              # stack 是 zoom，不是分屏树。kitty 0.48.2 保存 stack 时不带 last_used_layout，
+              # 下次启动会卡在全屏叠层，hsplit/prefix+z 都失效。
+              swapped = _swap_stack_tabs_to_splits(boss)
               boss.save_as_session(
                   "--save-only",
                   "--use-foreground-process",
@@ -451,6 +492,10 @@
           except Exception:
               traceback.print_exc()
           finally:
+              try:
+                  _restore_stack_tabs(swapped)
+              except Exception:
+                  traceback.print_exc()
               _saving = False
 
 
@@ -466,6 +511,35 @@
           save_last_session(boss)
           if "--quit" in args:
               boss.quit()
+    '';
+  };
+
+  xdg.configFile."kitty/toggle_zoom.py" = lib.mkIf pkgs.stdenv.isDarwin {
+    text = ''
+      def main(args):
+          pass
+
+
+      from kittens.tui.handler import result_handler
+
+
+      def _layout_basename(tab):
+          name = getattr(tab, "_current_layout_name", None)
+          if not name:
+              layout = getattr(tab, "current_layout", None)
+              name = getattr(layout, "name", "") if layout is not None else ""
+          return (name or "").split(":")[0]
+
+
+      @result_handler(no_ui=True)
+      def handle_result(args, answer, target_window_id, boss):
+          tab = boss.active_tab
+          if tab is None:
+              return
+          if _layout_basename(tab) == "stack":
+              tab.goto_layout("splits")
+          else:
+              tab.goto_layout("stack")
     '';
   };
 
