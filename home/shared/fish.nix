@@ -155,7 +155,8 @@ in
         set -l pg_log_file "${postgresLogFile}"
         set -l pg_user "${username}"
         set -l pg_database "${username}"
-        set -l pg_url "postgresql://$pg_user:@localhost:5432/$pg_database"
+        set -l pg_port 5432
+        set -l pg_url "postgresql://$pg_user:@localhost:$pg_port/$pg_database"
         set -l pg_initdb (realpath (command -v initdb))
         set -l pg_bin_dir (dirname "$pg_initdb")
         set -l pg_package_dir (dirname "$pg_bin_dir")
@@ -168,11 +169,70 @@ in
 
         "$pg_bin_dir/pg_ctl" -D "$pg_data_dir" status >/dev/null 2>&1
         if test $status -ne 0
-          "$pg_bin_dir/pg_ctl" -D "$pg_data_dir" -l "$pg_log_file" -o "-c listen_addresses=localhost -p 5432" start; or return 1
+          set -l occupant_pid
+          if type -q lsof
+            set occupant_pid (lsof -nP -iTCP:$pg_port -sTCP:LISTEN -t 2>/dev/null | uniq)
+          end
+
+          set -l port_busy 0
+          if test -n "$occupant_pid"
+            set port_busy 1
+          else if not type -q lsof
+            "$pg_bin_dir/pg_isready" -h localhost -p $pg_port >/dev/null 2>&1
+            and set port_busy 1
+          end
+
+          set -l occupant_cmd
+          set -l occupant_data
+          if test $port_busy -eq 1
+            if test -n "$occupant_pid"
+              set occupant_cmd (ps -p $occupant_pid[1] -o args= 2>/dev/null | string trim)
+            end
+            set occupant_data ("$pg_bin_dir/psql" -h localhost -p $pg_port -U "$pg_user" -d postgres -tAc "show data_directory" 2>/dev/null)
+            if test -z "$occupant_data"; and string match -q -r -- '-D\s+\S+' -- $occupant_cmd
+              set occupant_data (string replace -r -- '.*-D\s+(\S+).*' '$1' -- $occupant_cmd)
+            end
+          end
+
+          set -l occupant_is_ours 0
+          if test -n "$occupant_data"; and test (realpath "$occupant_data" 2>/dev/null) = (realpath "$pg_data_dir")
+            set occupant_is_ours 1
+          end
+
+          if test $port_busy -eq 1; and test $occupant_is_ours -eq 0
+            echo "端口 $pg_port 已被占用，无法启动 $pg_data_dir" >&2
+            if test -n "$occupant_pid"
+              echo "占用进程: PID $occupant_pid[1]" >&2
+            end
+            if test -n "$occupant_cmd"
+              echo "  $occupant_cmd" >&2
+            end
+            if test -n "$occupant_data"
+              echo "占用数据目录: $occupant_data" >&2
+              echo "停掉它再启动: pg_ctl -D \"$occupant_data\" stop" >&2
+            else
+              echo "先释放端口 $pg_port 再跑 pgstart" >&2
+            end
+            return 1
+          end
+
+          if test $occupant_is_ours -eq 0
+            if not "$pg_bin_dir/pg_ctl" -D "$pg_data_dir" -l "$pg_log_file" -o "-c listen_addresses=localhost -p $pg_port" start >/dev/null 2>&1
+              echo "PostgreSQL 启动失败: $pg_data_dir" >&2
+              if test -f "$pg_log_file"
+                echo "日志 $pg_log_file：" >&2
+                tail -n 20 "$pg_log_file" >&2
+              end
+              return 1
+            end
+          end
         end
 
-        "$pg_bin_dir/createdb" -h localhost -p 5432 -U "$pg_user" "$pg_database" >/dev/null 2>&1; or true
-        "$pg_bin_dir/psql" -h localhost -p 5432 -U "$pg_user" -d "$pg_database" -c "select 1" >/dev/null 2>&1; or return 1
+        "$pg_bin_dir/createdb" -h localhost -p $pg_port -U "$pg_user" "$pg_database" >/dev/null 2>&1; or true
+        if not "$pg_bin_dir/psql" -h localhost -p $pg_port -U "$pg_user" -d "$pg_database" -c "select 1" >/dev/null 2>&1
+          echo "无法连接 $pg_url" >&2
+          return 1
+        end
 
         echo "$pg_url"
       '';
