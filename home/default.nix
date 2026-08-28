@@ -21,6 +21,7 @@
       ./shared/sqlite3.nix
       ./shared/bat.nix
       ./shared/fish.nix
+      ./shared/dev-db.nix
       ./shared/atuin.nix
       ./shared/zoxide.nix
       ./shared/direnv.nix
