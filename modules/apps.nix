@@ -34,6 +34,7 @@
     eza # https://github.com/eza-community/eza
     fzf # https://github.com/junegunn/fzf
     gh # https://github.com/cli/cli
+    graphite-cli # https://graphite.dev/docs/graphite-cli
     delta # https://github.com/dandavison/delta
     git-extras # https://github.com/tj/git-extras
     git-lfs # https://github.com/git-lfs/git-lfs
