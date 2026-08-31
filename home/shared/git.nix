@@ -24,6 +24,7 @@
       // lib.optionalAttrs (username == "fox") {
         email = "991854471@qq.com";
       };
+      advice.skippedCherryPicks = false;
       core = {
         editor = "nvim";
       };
