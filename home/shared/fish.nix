@@ -102,6 +102,105 @@ in
         and cd $argv[1]
       '';
 
+      # 按小写后缀归类这一层的普通文件。无后缀进 noext/。只移动，不删除、不改名、不覆盖。
+      byext = ''
+        if test (count $argv) -gt 1
+          echo "用法: byext [目录]" >&2
+          return 1
+        end
+
+        set -l root .
+        if set -q argv[1]
+          set root $argv[1]
+        end
+        if not test -d "$root"
+          echo "不是目录: $root" >&2
+          return 1
+        end
+
+        set root (path resolve -- "$root")
+        set -l root_re (string escape --style=regex -- "$root/")
+        set -l files (find -- "$root" -mindepth 1 -maxdepth 1 -type f)
+        set -l pending $files
+        set -l moved 0
+        set -l skipped 0
+
+        while test (count $pending) -gt 0
+          set -l before (count $pending)
+          set -l next
+          for path in $pending
+            if test -z "$path"; or not string match -q -r -- "^$root_re" "$path"
+              set skipped (math $skipped + 1)
+              echo "跳过（不在目标目录内）: $path" >&2
+              continue
+            end
+
+            set -l name (path basename -- "$path")
+            set -l parts (string split -r -m1 . -- $name)
+            set -l bucket noext
+            if test (count $parts) -eq 2; and test -n "$parts[1]"; and test -n "$parts[2]"
+              set bucket (string lower -- $parts[2])
+            end
+
+            set -l dest_dir "$root/$bucket"
+            if not string match -q -r -- "^$root_re" "$dest_dir"
+              set skipped (math $skipped + 1)
+              echo "跳过（目标越界）: $name" >&2
+              continue
+            end
+
+            # 符号链接目录不跟随，避免把文件移出这层目录。
+            if test -L "$dest_dir"
+              set skipped (math $skipped + 1)
+              echo "跳过（目标是符号链接）: $name -> $bucket/" >&2
+              continue
+            end
+
+            # 同名文件挡住目录时先搁置，等那个文件被移走后再试。移不走就保持原样。
+            if test -e "$dest_dir"; and not test -d "$dest_dir"
+              set next $next "$path"
+              continue
+            end
+
+            if not test -d "$dest_dir"
+              if not command mkdir -- "$dest_dir"
+                set skipped (math $skipped + 1)
+                echo "无法创建目录: $dest_dir" >&2
+                continue
+              end
+            end
+
+            set -l dest "$dest_dir/$name"
+            if test -e "$dest"; or test -L "$dest"
+              set skipped (math $skipped + 1)
+              echo "已存在，跳过: $name -> $bucket/$name" >&2
+              continue
+            end
+
+            if not command mv -n -- "$path" "$dest"; or test -e "$path"
+              set skipped (math $skipped + 1)
+              echo "未移动: $name" >&2
+              continue
+            end
+
+            set moved (math $moved + 1)
+            echo "移动: $name -> $bucket/$name"
+          end
+
+          if test (count $next) -eq $before
+            for path in $next
+              set -l name (path basename -- "$path")
+              set skipped (math $skipped + 1)
+              echo "跳过（目录名被文件占用）: $name" >&2
+            end
+            break
+          end
+          set pending $next
+        end
+
+        echo "完成: 移动 $moved 个，跳过 $skipped 个"
+      '';
+
       # 提取各种压缩文件
       extract = ''
         function extract --argument-names file
