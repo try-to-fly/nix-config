@@ -112,6 +112,7 @@
     pandoc # https://github.com/jgm/pandoc
     platformio
     mihomo
+    android-tools # adb / fastboot
   ];
 
   environment.shells = [
