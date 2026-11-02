@@ -87,7 +87,7 @@
     ffmpegthumbnailer # https://github.com/dirkvdb/ffmpegthumbnailer
     jless # https://github.com/PaulJuliusMartinez/jless
     jc # https://github.com/kellyjonbrazil/jc
-    # yt-dlp # 临时禁用：jeepney 依赖在 macOS 上构建失败
+    yt-dlp # 临时禁用：jeepney 依赖在 macOS 上构建失败
     rustc # https://github.com/rust-lang/rust
     rustup # https://github.com/rust-lang/rustup
     cargo # https://github.com/rust-lang/cargo
