@@ -16,10 +16,10 @@
         shortTimeFormat = "15:04";
       };
       git = {
-        pagers = [
+        diffRenderers = [
           {
-            colorArg = "always";
-            externalDiffCommand = "difft";
+            type = "extDiff";
+            command = "difft";
           }
         ];
       };
