@@ -8,7 +8,39 @@
     enableNushellIntegration = true;
 
     settings = {
+      # AGENTS.md 会被 Codex / Grok 等 harness 默认加载（会沿父目录向上找）。
+      # 放到 prompt 最前；当前目录命中显示 ⚠ AGENTS.md，父目录命中带 ↑。
+      format = "\${custom.agents}$all";
       right_format = "\${env_var.http_proxy}";
+
+      custom = {
+        agents = {
+          description = "AGENTS.md in cwd or a parent directory (loaded by AI harnesses)";
+          when = ''
+            d="$PWD"
+            while :; do
+              [ -f "$d/AGENTS.md" ] && exit 0
+              [ "$d" = / ] && exit 1
+              d=$(dirname "$d")
+            done
+          '';
+          command = ''
+            d="$PWD"
+            while :; do
+              if [ -f "$d/AGENTS.md" ]; then
+                [ "$d" = "$PWD" ] || printf ↑
+                exit 0
+              fi
+              [ "$d" = / ] && exit 1
+              d=$(dirname "$d")
+            done
+          '';
+          shell = [ "sh" ];
+          symbol = "⚠ AGENTS.md";
+          format = "[\${symbol}\${output}](\${style}) ";
+          style = "bold fg:black bg:yellow";
+        };
+      };
       battery = {
         full_symbol = "🔋 ";
         charging_symbol = "⚡️ ";
