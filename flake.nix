@@ -9,18 +9,21 @@
   ##################################################################################################################
 
   # the nixConfig here only affects the flake itself, not the system configuration!
+  # extra-substituters 追加社区缓存；不要写 substituters，那会盖掉 cache.nixos.org。
   nixConfig = {
-    substituters = [
-      # Use the official Nix binary cache for stability.
-      "https://cache.nixos.org"
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
   # This is the standard format for flake.nix. `inputs` are the dependencies of the flake,
   # Each item in `inputs` will be passed as a parameter to the `outputs` function after being pulled and built.
   inputs = {
-    # Use nixpkgs unstable branch for latest packages and features.
-    nixpkgs.url = "github:NixOS/nixpkgs/master";
+    # nixpkgs-unstable 跟 Hydra 渠道，aarch64-darwin 才能打到 cache.nixos.org。
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # home-manager, used for managing user configuration
     home-manager = {
