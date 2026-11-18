@@ -560,6 +560,13 @@ in
 
     # Fish 交互式初始化 (等同于zsh的initContent)
     interactiveShellInit = ''
+      # 条件加载 Homebrew 环境变量和补全。
+      # 必须放在最前面：brew shellenv 会把 /opt/homebrew/bin 前置到 PATH，
+      # 若放在 Nix 路径之后会导致 Homebrew 的 ffmpeg（不含 zscale）被优先使用。
+      if test -f /opt/homebrew/bin/brew
+        eval (/opt/homebrew/bin/brew shellenv fish)
+      end
+
       # Manually prepend Nix paths to ensure they are available.
       set -gx PATH /Users/smile/.local/bin $PATH
       set -gx PATH /etc/profiles/per-user/${username}/bin $PATH
@@ -577,11 +584,6 @@ in
 
       # 禁用conda更新检查
       set -gx CONDA_NUMBER_CHANNEL_NOTICES 0
-
-      # 条件加载 Homebrew 环境变量和补全
-      if test -f /opt/homebrew/bin/brew
-        eval (/opt/homebrew/bin/brew shellenv fish)
-      end
 
       # 设置fish的颜色主题
       set -g fish_color_autosuggestion 555
